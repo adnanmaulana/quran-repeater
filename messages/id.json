@@ -174,5 +174,18 @@
 	"delete_playlist_confirm": "Hapus “{name}”? Riwayat dan unduhan tetap tersimpan.",
 	"download_size": "Unduh · ≈ {size}",
 	"played_when": "Diputar {when}",
-	"not_played": "Belum pernah diputar"
+	"not_played": "Belum pernah diputar",
+	"reciters_title": "Pilih qari",
+	"search_reciters": "Cari qari",
+	"filter_all": "Semua",
+	"filter_downloaded": "Terunduh",
+	"filter_mujawwad": "Mujawwad",
+	"style_murattal": "Murattal",
+	"style_mujawwad": "Mujawwad",
+	"tag_downloaded": "Terunduh",
+	"tag_streams": "Streaming",
+	"preview_reciter": "Dengarkan contoh {name}",
+	"stop_preview": "Hentikan contoh {name}",
+	"no_reciters": "Tidak ada qari yang cocok",
+	"reciter_filters": "Saring qari"
 }

@@ -6,7 +6,7 @@
 	import Stepper from '#lib/components/Stepper.svelte';
 	import Switch from '#lib/components/Switch.svelte';
 	import Icon from '#lib/design/Icon.svelte';
-	import { RECITERS, initials, reciter } from '#lib/data/reciters.js';
+	import { initials, reciter } from '#lib/data/reciters.js';
 	import { count } from '#lib/format.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { LIMITS } from '#lib/repeat/draft.js';
@@ -167,15 +167,11 @@
 			<ChipGroup label={m.speed_label()} options={speeds} value={s.speed} onchange={(speed) => settings.update((x) => ({ ...x, speed }))} />
 		</section>
 
-		<label class="card reciter">
+		<a class="card reciter" href={resolve('/reciters')}>
 			<span class="avatar" aria-hidden="true">{initials(reciter(s.reciterId).name)}</span>
 			<span class="label"><small>{m.reciter()}</small><b>{reciter(s.reciterId).name}</b></span>
-			<Icon name="down" size={20} />
-			<!-- Native select for now; Phase 5 replaces it with the reciter screen with previews. -->
-			<select value={s.reciterId} onchange={(e) => settings.update((x) => ({ ...x, reciterId: e.currentTarget.value }))}>
-				{#each RECITERS as r (r.id)}<option value={r.id}>{r.name}</option>{/each}
-			</select>
-		</label>
+			<Icon name="chevron" size={20} />
+		</a>
 
 		<button type="button" class="save" onclick={onSaveClick} aria-live="polite">
 			<Icon name={savedFlash ? 'check' : 'bookmark'} size={18} />
@@ -287,17 +283,6 @@
 	}
 	.reciter b {
 		color: var(--ink);
-	}
-	.reciter:has(select:focus-visible) {
-		outline: 2px solid var(--accent);
-		outline-offset: 2px;
-	}
-	.reciter select {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		opacity: 0;
-		cursor: pointer;
 	}
 	.avatar {
 		display: flex;

@@ -174,5 +174,18 @@
 	"delete_playlist_confirm": "Delete “{name}”? Your history and downloads stay.",
 	"download_size": "Download · ≈ {size}",
 	"played_when": "Played {when}",
-	"not_played": "Not played yet"
+	"not_played": "Not played yet",
+	"reciters_title": "Choose reciter",
+	"search_reciters": "Search reciters",
+	"filter_all": "All",
+	"filter_downloaded": "Downloaded",
+	"filter_mujawwad": "Mujawwad",
+	"style_murattal": "Murattal",
+	"style_mujawwad": "Mujawwad",
+	"tag_downloaded": "Downloaded",
+	"tag_streams": "Streams",
+	"preview_reciter": "Preview {name}",
+	"stop_preview": "Stop preview of {name}",
+	"no_reciters": "No reciters match",
+	"reciter_filters": "Filter reciters"
 }
