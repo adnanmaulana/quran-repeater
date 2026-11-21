@@ -59,7 +59,7 @@ test('custom range can span surahs', async ({ page }) => {
 
 test('switching to Indonesian is instant and remembered', async ({ page }) => {
 	await page.goto('/settings');
-	await page.getByText('Bahasa Indonesia').click();
+	await page.getByText('Bahasa Indonesia', { exact: true }).click();
 	await expect(page.getByRole('heading', { level: 1 })).toHaveText('Pengaturan');
 	await page.reload();
 	await expect(page.getByRole('heading', { level: 1 })).toHaveText('Pengaturan');

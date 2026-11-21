@@ -20,7 +20,7 @@ export const DEFAULT_SETTINGS: Settings = {
 	speed: 1,
 	gapMs: 1000,
 	arSize: 'M',
-	theme: 'system',
+	theme: 'light',
 	translation: null
 };
 

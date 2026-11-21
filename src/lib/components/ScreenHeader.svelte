@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Icon from '#lib/design/Icon.svelte';
+	import ThemeToggle from './ThemeToggle.svelte';
 	import { m } from '#lib/paraglide/messages.js';
 
 	let {
@@ -23,7 +24,10 @@
 			{#if eyebrow}<span class="eyebrow-text">{eyebrow}</span>{/if}
 			<h1>{title}</h1>
 		</div>
-		{@render actions?.()}
+		<div class="actions">
+			{@render actions?.()}
+			<ThemeToggle />
+		</div>
 	</header>
 {/if}
 
@@ -35,7 +39,13 @@
 		gap: 12px;
 		padding: 20px var(--gutter) 0;
 	}
-	.big div {
+	.actions {
+		display: flex;
+		flex-shrink: 0;
+		align-items: center;
+		gap: 8px;
+	}
+	.big > div:first-child {
 		display: flex;
 		flex-direction: column;
 		gap: 2px;
