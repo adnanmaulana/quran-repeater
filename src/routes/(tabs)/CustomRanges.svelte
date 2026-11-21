@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from '#lib/design/Icon.svelte';
-	import { SURAHS, countAyat, surah, surahsIn } from '#lib/data/quran.js';
+	import SurahPicker from '#lib/components/SurahPicker.svelte';
+	import { countAyat, surah, surahsIn } from '#lib/data/quran.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { itemFromRange, type Item } from '#lib/repeat/types.js';
 
@@ -51,22 +52,12 @@
 				</div>
 			{/if}
 			<div class="fields">
-				<label>
-					{m.from_surah()}
-					<select bind:value={r.fromS} onchange={() => normalize(r)}>
-						{#each SURAHS as s (s.n)}<option value={s.n}>{s.n} · {s.name}</option>{/each}
-					</select>
-				</label>
+				<SurahPicker label={m.from_surah()} bind:value={r.fromS} onchange={() => normalize(r)} />
 				<label>
 					{m.from_ayah()}
 					<input type="number" inputmode="numeric" min="1" max={surah(r.fromS).ayat} bind:value={r.fromA} onchange={() => normalize(r)} />
 				</label>
-				<label>
-					{m.to_surah()}
-					<select bind:value={r.toS} onchange={() => normalize(r)}>
-						{#each SURAHS as s (s.n)}<option value={s.n} disabled={s.n < r.fromS}>{s.n} · {s.name}</option>{/each}
-					</select>
-				</label>
+				<SurahPicker label={m.to_surah()} min={r.fromS} bind:value={r.toS} onchange={() => normalize(r)} />
 				<label>
 					{m.to_ayah()}
 					<input type="number" inputmode="numeric" min="1" max={surah(r.toS).ayat} bind:value={r.toA} onchange={() => normalize(r)} />
@@ -130,7 +121,7 @@
 		font-weight: 600;
 		color: var(--muted);
 	}
-	select,
+
 	input {
 		width: 100%;
 		height: 48px;

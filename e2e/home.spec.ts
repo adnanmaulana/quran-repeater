@@ -50,8 +50,11 @@ test('juz tab shows all 30 juz', async ({ page }) => {
 test('custom range can span surahs', async ({ page }) => {
 	await page.goto('/');
 	await page.getByRole('tab', { name: 'Custom ayat' }).click();
-	await page.getByLabel('From surah').selectOption('78');
-	await page.getByLabel('To surah').selectOption('80');
+	await page.getByRole('combobox', { name: 'From surah' }).fill('naba');
+	await page.getByRole('option', { name: /An-Naba/ }).click();
+	await page.getByRole('combobox', { name: 'To surah' }).fill('80');
+	await page.keyboard.press('Enter');
+	await expect(page.getByRole('combobox', { name: 'To surah' })).toHaveValue("80 · 'Abasa");
 	await page.getByLabel('To ayah').fill('42');
 	await page.getByLabel('To ayah').blur();
 	await expect(page.locator('.summary')).toHaveText('3 surahs · 128 ayat');
