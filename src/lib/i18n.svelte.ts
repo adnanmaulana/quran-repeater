@@ -2,9 +2,10 @@ import { getLocale, locales, setLocale, type Locale } from '#lib/paraglide/runti
 
 export { locales, type Locale };
 
-let current = $state<Locale>(getLocale());
+const initial = getLocale();
+let current = $state<Locale>(initial);
 
-if (typeof document !== 'undefined') document.documentElement.lang = current;
+if (typeof document !== 'undefined') document.documentElement.lang = initial;
 
 /**
  * Reactive wrapper around Paraglide's locale. Switching never reloads the page (that would stop
