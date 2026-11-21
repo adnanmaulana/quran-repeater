@@ -148,6 +148,15 @@
 	dialog::backdrop {
 		background: rgb(14 29 25 / 0.5);
 	}
+	@media (min-width: 768px) {
+		dialog {
+			margin: auto;
+			border-radius: 28px;
+		}
+		.handle {
+			visibility: hidden;
+		}
+	}
 	.sheet {
 		display: flex;
 		flex-direction: column;
