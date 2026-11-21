@@ -65,14 +65,24 @@ code is split per route.
 
 ## Phases
 
-| # | Phase | Done when |
-|---|---|---|
-| 1 | Scaffold, tokens + fonts, icons, base components, bottom nav, EN/ID, bundled metadata | Home matches the canvas in EN and ID; tabs and multi-select work |
-| 2 | Queue builder (unit-tested), Setup screen, playlist editing with drag reorder | The plays total matches the queue builder's count |
-| 3 | Audio engine, Now playing, mini player, Media Session | Al-Mulk 1–3 ×3 plays correctly with the screen locked, on an installed iPhone app and Android |
-| 4 | PWA install, offline caching, download sheet (all 4 states) | A downloaded playlist plays in airplane mode |
-| 5 | History + resume, saved playlists, reciters with preview, settings | Reopening the app resumes at the same ayah and repeat |
-| 6 | Wider layout, dark theme, accessibility, Lighthouse, deploy | Lighthouse ≥ 95, deployed |
+| # | Phase | Done when | Status |
+|---|---|---|---|
+| 1 | Scaffold, tokens + fonts, icons, base components, bottom nav, EN/ID, bundled metadata | Home matches the canvas in EN and ID; tabs and multi-select work | Done |
+| 2 | Queue builder (unit-tested), Setup screen, playlist editing with drag reorder | The plays total matches the queue builder's count | Done (#1) |
+| 3 | Audio engine, Now playing, mini player, Media Session | Al-Mulk 1–3 ×3 plays correctly with the screen locked, on an installed iPhone app and Android | Done in the browser (#2); real-device check open |
+| 4 | PWA install, offline caching, download sheet (all 4 states) | A downloaded playlist plays in airplane mode | Done (#4) |
+| 5 | History + resume, saved playlists, reciters with preview, settings | Reopening the app resumes at the same ayah and repeat | Done (#6) |
+| 6 | Wider layout, dark theme, accessibility, Lighthouse, CI, deploy | Lighthouse ≥ 95, deployed | Done (#7): Home 97 / Setup 96 / Settings 93 |
+
+## Quality gates
+
+- CI on every pull request: type-check (app + service worker), unit tests, build, browser tests.
+- `src/lib/design/contrast.test.ts` checks WCAG contrast of every text/background pair the screens
+  use, in light and dark.
+- `e2e/a11y.spec.ts` runs axe (WCAG 2.1 A/AA) on every screen in both themes.
+- Lighthouse (mobile, simulated slow 4G) on the production build: Home 97, Setup 96, Settings 93;
+  Accessibility, Best Practices and SEO 100. Settings' largest element is the Arabic size preview,
+  which waits for the 106 KB Amiri font.
 
 ## Offline
 
