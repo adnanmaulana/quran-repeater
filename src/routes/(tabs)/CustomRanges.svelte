@@ -13,13 +13,16 @@
 
 	let ranges = $state<Range[]>([blank()]);
 
-	const clamp = (v: number, max: number) => Math.min(max, Math.max(1, Math.round(v) || 1));
+	/** Ayah numbers `from`…`to`, for a dropdown. */
+	const ayatList = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
+	/** The end can't come before the start: in the same surah, it begins at the starting ayah. */
+	const firstToAyah = (r: Range) => (r.toS === r.fromS ? r.fromA : 1);
 
 	/** Keep ayah numbers inside their surah, and move the end along when the start passes it. */
 	function normalize(r: Range) {
-		r.fromA = clamp(r.fromA, surah(r.fromS).ayat);
-		r.toA = clamp(r.toA, surah(r.toS).ayat);
 		if (r.toS < r.fromS) r.toS = r.fromS;
+		r.fromA = Math.min(r.fromA, surah(r.fromS).ayat);
+		r.toA = Math.min(Math.max(r.toA, firstToAyah(r)), surah(r.toS).ayat);
 	}
 
 	const valid = (r: Range) => r.toS > r.fromS || (r.toS === r.fromS && r.toA >= r.fromA);
@@ -55,12 +58,16 @@
 				<SurahPicker label={m.from_surah()} bind:value={r.fromS} onchange={() => normalize(r)} />
 				<label>
 					{m.from_ayah()}
-					<input type="number" inputmode="numeric" min="1" max={surah(r.fromS).ayat} bind:value={r.fromA} onchange={() => normalize(r)} />
+					<select bind:value={r.fromA} onchange={() => normalize(r)}>
+						{#each ayatList(1, surah(r.fromS).ayat) as a (a)}<option value={a}>{a}</option>{/each}
+					</select>
 				</label>
 				<SurahPicker label={m.to_surah()} min={r.fromS} bind:value={r.toS} onchange={() => normalize(r)} />
 				<label>
 					{m.to_ayah()}
-					<input type="number" inputmode="numeric" min="1" max={surah(r.toS).ayat} bind:value={r.toA} onchange={() => normalize(r)} />
+					<select bind:value={r.toA} onchange={() => normalize(r)}>
+						{#each ayatList(firstToAyah(r), surah(r.toS).ayat) as a (a)}<option value={a}>{a}</option>{/each}
+					</select>
 				</label>
 			</div>
 			<p class="summary" class:bad={!valid(r)} aria-live="polite">{summary(r)}</p>
@@ -122,7 +129,7 @@
 		color: var(--muted);
 	}
 
-	input {
+	select {
 		width: 100%;
 		height: 48px;
 		padding: 0 12px;
