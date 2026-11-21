@@ -12,6 +12,7 @@
 	import { LIMITS } from '#lib/repeat/draft.js';
 	import { playsPerListLoop, totalPlays } from '#lib/repeat/queue.js';
 	import { itemAyat } from '#lib/repeat/types.js';
+	import { actions as playerActions } from '#lib/player/player.svelte.js';
 	import { draft, draftConfig, editDraft } from '#lib/stores/draft.svelte.js';
 	import { settings } from '#lib/stores/settings.svelte.js';
 	import ItemList from './ItemList.svelte';
@@ -32,6 +33,12 @@
 	const gaps = [0, 1000, 2000, 3000].map((ms) => ({ value: ms, label: `${ms / 1000}s` }));
 	const speeds = [0.75, 1, 1.25, 1.5].map((v) => ({ value: v, label: `${v}×` }));
 	const homeHref = resolve('/(tabs)');
+
+	function start() {
+		// Called from the tap itself, so the browser allows audio to start.
+		playerActions.start(draftConfig());
+		goto(resolve('/player'));
+	}
 	const addHref = resolve('/(tabs)?add=1');
 </script>
 
@@ -114,7 +121,7 @@
 
 		<div class="bar">
 			<p aria-live="polite">{summary}</p>
-			<button type="button" class="primary" onclick={() => goto(resolve('/player'))}>
+			<button type="button" class="primary" onclick={start}>
 				<Icon name="play" size={18} />{m.start_repeating()}
 			</button>
 		</div>
