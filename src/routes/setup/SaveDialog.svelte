@@ -92,7 +92,7 @@
 	.primary {
 		border: 0;
 		background: var(--accent);
-		color: #fff;
+		color: var(--on-accent);
 	}
 	.primary:disabled {
 		background: var(--border-strong);

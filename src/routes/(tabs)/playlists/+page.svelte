@@ -129,7 +129,7 @@
 		padding: 0 16px;
 		border-radius: 22px;
 		background: var(--accent);
-		color: #fff;
+		color: var(--on-accent);
 		font-size: 14px;
 		font-weight: 600;
 	}
@@ -186,7 +186,7 @@
 		border: 0;
 		border-radius: 50%;
 		background: var(--accent);
-		color: #fff;
+		color: var(--on-accent);
 	}
 	.bottom {
 		display: flex;

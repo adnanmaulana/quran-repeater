@@ -284,7 +284,7 @@
 		height: 22px;
 		border-radius: 50%;
 		background: var(--accent);
-		color: #fff;
+		color: var(--on-accent);
 	}
 	.juz-ar {
 		font-size: 20px;

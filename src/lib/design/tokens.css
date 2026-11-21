@@ -13,6 +13,8 @@
 	--accent-ink: #064c3e;
 	--accent-soft: #e3f0ec;
 	--accent-tint: #eef6f3;
+	/* Text and icons on an accent background. */
+	--on-accent: #ffffff;
 	--danger: #b3261e;
 	--danger-soft: #fcedeb;
 
@@ -59,6 +61,7 @@
 		--accent-ink: #8fd9c4;
 		--accent-soft: #1b3a32;
 		--accent-tint: #17302a;
+		--on-accent: #0b1512;
 		color-scheme: dark;
 	}
 }
@@ -76,5 +79,6 @@
 	--accent-ink: #8fd9c4;
 	--accent-soft: #1b3a32;
 	--accent-tint: #17302a;
+	--on-accent: #0b1512;
 	color-scheme: dark;
 }
