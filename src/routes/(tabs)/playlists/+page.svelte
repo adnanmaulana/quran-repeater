@@ -3,6 +3,7 @@
 	import { resolve } from '$app/paths';
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
 	import Icon from '#lib/design/Icon.svelte';
+	import { layout, zoomOut } from '#lib/motion/transitions.js';
 	import { count, repeatRule, title } from '#lib/format.js';
 	import { history } from '#lib/history/history.svelte.js';
 	import { dayKey } from '#lib/history/history.js';
@@ -86,7 +87,7 @@
 		{#each list as p (p.id)}
 			{@const st = offline[p.id]}
 			{@const ayat = p.draft.items.reduce((a, it) => a + itemAyat(it), 0)}
-			<li class="card">
+			<li class="card" animate:layout out:zoomOut>
 				<div class="top">
 					<span class="text">
 						<span class="name">{p.name}</span>

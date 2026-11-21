@@ -44,8 +44,12 @@
 		background: var(--surface);
 		color: var(--ink);
 	}
+	dialog[open] {
+		animation: dialog-in var(--spring-snappy-ms, 0.25s) var(--spring-snappy, ease-out);
+	}
 	dialog::backdrop {
 		background: var(--scrim);
+		animation: backdrop-in 0.2s ease-out;
 	}
 	form {
 		display: flex;

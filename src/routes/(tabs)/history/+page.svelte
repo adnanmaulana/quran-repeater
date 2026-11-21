@@ -3,6 +3,7 @@
 	import { resolve } from '$app/paths';
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
 	import Icon from '#lib/design/Icon.svelte';
+	import { layout, zoomOut } from '#lib/motion/transitions.js';
 	import { reciter } from '#lib/data/reciters.js';
 	import { playlistTitle, repeatRule } from '#lib/format.js';
 	import { groupByDay, loopsDone, progress, stats, type HistoryEntry } from '#lib/history/history.js';
@@ -67,7 +68,7 @@
 			<ul>
 				{#each g.entries as e (e.id)}
 					{@const title = name(e)}
-					<li class="card">
+					<li class="card" animate:layout out:zoomOut>
 						<div class="top">
 							<span class="text">
 								<span class="title">{title}</span>
