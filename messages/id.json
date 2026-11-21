@@ -104,7 +104,6 @@
 	"retry": "Coba lagi",
 	"finished": "Selesai",
 	"play_again": "Putar lagi",
-	"now_playing_label": "Sedang diputar: {title}",
 	"dl_button": "Unduh untuk offline",
 	"dl_button_progress": "Unduh untuk offline: {pct}%",
 	"dl_live": "Mengunduh untuk offline",
@@ -201,5 +200,7 @@
 	"theme_system": "Sistem",
 	"theme_light": "Terang",
 	"theme_dark": "Gelap",
-	"about_sources": "Teks dari AlQuran.cloud, audio dari EveryAyah. Semua yang kamu simpan tetap di perangkat ini."
+	"about_sources": "Teks dari AlQuran.cloud, audio dari EveryAyah. Semua yang kamu simpan tetap di perangkat ini.",
+	"ayah_progress": "Progres ayat",
+	"time_of": "{current} dari {total}"
 }

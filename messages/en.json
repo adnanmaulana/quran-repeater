@@ -104,7 +104,6 @@
 	"retry": "Retry",
 	"finished": "Finished",
 	"play_again": "Play again",
-	"now_playing_label": "Now playing: {title}",
 	"dl_button": "Download for offline",
 	"dl_button_progress": "Download for offline: {pct}%",
 	"dl_live": "Downloading for offline",
@@ -201,5 +200,7 @@
 	"theme_system": "System",
 	"theme_light": "Light",
 	"theme_dark": "Dark",
-	"about_sources": "Text from AlQuran.cloud, audio from EveryAyah. Everything you save stays on this device."
+	"about_sources": "Text from AlQuran.cloud, audio from EveryAyah. Everything you save stays on this device.",
+	"ayah_progress": "Ayah progress",
+	"time_of": "{current} of {total}"
 }
