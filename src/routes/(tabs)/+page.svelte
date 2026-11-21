@@ -4,6 +4,7 @@
 	import { page } from '$app/state';
 	import { count } from '#lib/format.js';
 	import Icon from '#lib/design/Icon.svelte';
+	import { zoomIn, zoomOut } from '#lib/motion/transitions.js';
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
 	import SegmentedTabs from '#lib/components/SegmentedTabs.svelte';
 	import SelectionBar from '#lib/components/SelectionBar.svelte';
@@ -185,7 +186,7 @@
 {#snippet juzCard(n: number)}
 	<span class="juz-top">
 		<span class="eyebrow">{m.juz_label({ n })}</span>
-		{#if picked.includes(n)}<span class="tick"><Icon name="check" size={14} stroke={3} /></span>{/if}
+		{#if picked.includes(n)}<span class="tick" in:zoomIn out:zoomOut={{ duration: 100, to: 0.5 }}><Icon name="check" size={14} stroke={3} /></span>{/if}
 	</span>
 	<span class="ar juz-ar" lang="ar">{surah(JUZ[n - 1].start.s).ar}</span>
 	<span class="juz-meta">{m.juz_starts({ ref: juzStart(n) })}</span>
