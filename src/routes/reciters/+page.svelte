@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { track } from '#lib/analytics/analytics.js';
 	import { resolve } from '$app/paths';
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
 	import Icon from '#lib/design/Icon.svelte';
@@ -27,6 +28,7 @@
 	);
 
 	function choose(r: Reciter) {
+		if (r.id !== settings.value.reciterId) track('reciter_choose', { reciter: r.id });
 		settings.update((s) => ({ ...s, reciterId: r.id }));
 	}
 
