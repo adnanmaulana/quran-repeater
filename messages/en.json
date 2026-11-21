@@ -126,5 +126,19 @@
 	"dl_resume": "Resume",
 	"dl_close": "Close",
 	"dl_percent": "{pct}% downloaded",
-	"offline_ready": "Offline ready"
+	"offline_ready": "Offline ready",
+	"install_title": "Install app",
+	"install_button": "Install",
+	"install_hint": "Adds Quran Repeater to your home screen and lets it play like an app, even offline.",
+	"install_ios": "In Safari, tap Share, then “Add to Home Screen”.",
+	"install_other": "Use your browser’s menu: “Install app” or “Add to Home screen”.",
+	"install_done": "Installed on this device",
+	"storage_title": "Storage",
+	"downloaded_audio": "Downloaded audio",
+	"downloaded_meta": "{files} · {size}",
+	"downloaded_none": "Nothing downloaded yet",
+	"files_count": "{count} files",
+	"remove_downloads": "Remove downloads",
+	"remove_downloads_confirm": "Remove all downloaded audio from this device? You can download it again later.",
+	"storage_total": "This app uses {size} on this device."
 }

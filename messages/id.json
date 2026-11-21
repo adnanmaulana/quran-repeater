@@ -126,5 +126,19 @@
 	"dl_resume": "Lanjutkan",
 	"dl_close": "Tutup",
 	"dl_percent": "{pct}% terunduh",
-	"offline_ready": "Siap offline"
+	"offline_ready": "Siap offline",
+	"install_title": "Pasang aplikasi",
+	"install_button": "Pasang",
+	"install_hint": "Menambahkan Quran Repeater ke layar utama agar bisa diputar seperti aplikasi, bahkan offline.",
+	"install_ios": "Di Safari, ketuk Bagikan, lalu “Tambah ke Layar Utama”.",
+	"install_other": "Gunakan menu browser: “Instal aplikasi” atau “Tambahkan ke layar utama”.",
+	"install_done": "Terpasang di perangkat ini",
+	"storage_title": "Penyimpanan",
+	"downloaded_audio": "Audio terunduh",
+	"downloaded_meta": "{files} · {size}",
+	"downloaded_none": "Belum ada yang diunduh",
+	"files_count": "{count} file",
+	"remove_downloads": "Hapus unduhan",
+	"remove_downloads_confirm": "Hapus semua audio yang diunduh dari perangkat ini? Kamu bisa mengunduhnya lagi nanti.",
+	"storage_total": "Aplikasi ini memakai {size} di perangkat ini."
 }
