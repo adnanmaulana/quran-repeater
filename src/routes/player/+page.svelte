@@ -71,7 +71,7 @@
 		</div>
 
 		<main class="middle">
-			<AyahText ref={snap.ref} basmalah={snap.phase === 'basmalah'} />
+			<AyahText ref={snap.ref} basmalah={snap.phase === 'basmalah'} reciterId={cfg.reciterId} active={busy} gap={snap.phase === 'gap'} />
 		</main>
 
 		<section class="bottom">
