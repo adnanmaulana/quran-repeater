@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '#lib/design/tokens.css';
 	import '#lib/design/global.css';
+	import { loadTracker } from '#lib/analytics/analytics.js';
 	import { i18n } from '#lib/i18n.svelte.js';
 	import { restoreSession } from '#lib/player/player.svelte.js';
 	import { initInstall } from '#lib/pwa/install.svelte.js';
@@ -22,6 +23,7 @@
 	onMount(() => {
 		document.getElementById('splash')?.remove(); // the app is on screen now
 		installSpringTokens();
+		loadTracker();
 		restoreSession();
 		initInstall();
 	});
