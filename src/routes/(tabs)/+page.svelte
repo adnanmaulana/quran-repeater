@@ -1,6 +1,8 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
+	import { count } from '#lib/format.js';
 	import Icon from '#lib/design/Icon.svelte';
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
 	import SegmentedTabs from '#lib/components/SegmentedTabs.svelte';
@@ -11,7 +13,7 @@
 	import { i18n } from '#lib/i18n.svelte.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { itemAyat, itemFromJuz, itemFromSurah, type Item } from '#lib/repeat/types.js';
-	import { startDraft } from '#lib/stores/draft.svelte.js';
+	import { addToDraft, startDraft } from '#lib/stores/draft.svelte.js';
 	import { ui } from '#lib/stores/ui.svelte.js';
 
 	type Mode = 'surah' | 'juz' | 'custom';
@@ -22,6 +24,8 @@
 	/** Selected surah or juz numbers, in the order they were tapped (that becomes the playlist order). */
 	let picked = $state<number[]>([]);
 
+	/** Opened from Setup's "Add surah or range": picks are appended to the playlist. */
+	const adding = $derived(page.url.searchParams.has('add'));
 	const lang = $derived(i18n.locale === 'id' ? 'id' : 'en');
 	const surahs = $derived(searchSurahs(query, lang));
 	const setupHref = resolve('/setup');
@@ -51,9 +55,17 @@
 		picked = picked.includes(n) ? picked.filter((x) => x !== n) : [...picked, n];
 	}
 
+	/** True when we got here from Setup, so returning is a history step back, not a new entry. */
+	let cameFromSetup = false;
+	afterNavigate(({ from }) => {
+		cameFromSetup = from?.route.id === '/setup';
+	});
+
 	function open(items: Item[]) {
-		startDraft(items);
-		goto(setupHref);
+		if (adding) addToDraft(items);
+		else startDraft(items);
+		if (adding && cameFromSetup) history.back();
+		else goto(setupHref, { replaceState: adding });
 	}
 
 	/** In normal mode a row is a link; set the draft before the navigation happens. */
@@ -72,7 +84,7 @@
 
 <svelte:head><title>{m.app_name()}</title></svelte:head>
 
-<ScreenHeader eyebrow={m.tagline()} title={m.app_name()}>
+<ScreenHeader eyebrow={adding ? m.adding_to_playlist() : m.tagline()} title={m.app_name()}>
 	{#snippet actions()}
 		<a class="pill" href={resolve('/(tabs)/playlists')}>
 			<Icon name="playlist" size={18} />{m.nav_playlists()}
@@ -111,7 +123,7 @@
 {#if mode === 'surah'}
 	<div class="list">
 		{#each surahs as s (s.n)}
-			{@const meta = `${place(s)} · ${m.ayat_count({ count: s.ayat })}`}
+			{@const meta = `${place(s)} · ${count.ayat(s.ayat)}`}
 			{#if selecting}
 				<SurahRow mode="check" badge={s.n} title={s.name} {meta} ar={s.ar} checked={picked.includes(s.n)} ontoggle={() => toggle(s.n)} />
 			{:else}
@@ -147,14 +159,14 @@
 	</span>
 	<span class="ar juz-ar" lang="ar">{surah(JUZ[n - 1].start.s).ar}</span>
 	<span class="juz-meta">{m.juz_starts({ ref: juzStart(n) })}</span>
-	<span class="juz-meta">{m.ayat_count({ count: juzAyat(n) })}</span>
+	<span class="juz-meta">{count.ayat(juzAyat(n))}</span>
 {/snippet}
 
 {#if selecting}
 	<SelectionBar
 		title={m.selected_count({ count: picked.length })}
-		meta={picked.length ? `${pickedNames} · ${m.ayat_count({ count: pickedAyat })}` : m.pick_at_least_one()}
-		action={m.set_up_repeat()}
+		meta={picked.length ? `${pickedNames} · ${count.ayat(pickedAyat)}` : m.pick_at_least_one()}
+		action={adding ? m.add_to_playlist() : m.set_up_repeat()}
 		disabled={!picked.length}
 		onaction={() => open(pickedItems)}
 	/>
