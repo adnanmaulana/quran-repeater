@@ -15,7 +15,8 @@
 {#if item && snap.ref && snap.config && snap.pos}
 	{@const name = title(item)}
 	<div class="mini">
-		<a href={resolve('/player')} aria-label={m.now_playing_label({ title: name })}>
+		<a href={resolve('/player')}>
+			<span class="sr-only">{m.player_title()}:</span>
 			<span class="name">{name}</span>
 			<span class="meta">
 				{snap.ref.s}:{snap.ref.a} · {m.repeat_of({ n: snap.pos.rep + 1, total: snap.config.perAyah })}

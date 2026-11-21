@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { actions } from '#lib/player/player.svelte.js';
+	import { m } from '#lib/paraglide/messages.js';
 
 	/** `gap`: the silent pause between repeats is playing; show the ayah as finished. */
 	let { active, gap = false }: { active: boolean; gap?: boolean } = $props();
@@ -27,7 +28,15 @@
 </script>
 
 <div class="progress">
-	<div class="track" role="progressbar" aria-valuemin={0} aria-valuemax={Math.round(duration)} aria-valuenow={Math.round(current)}>
+	<div
+		class="track"
+		role="progressbar"
+		aria-label={m.ayah_progress()}
+		aria-valuemin={0}
+		aria-valuemax={Math.round(duration)}
+		aria-valuenow={Math.round(current)}
+		aria-valuetext={m.time_of({ current: fmt(current), total: fmt(duration) })}
+	>
 		<div class="fill" style="transform: scaleX({pct / 100})"></div>
 	</div>
 	<div class="times"><span>{fmt(gap ? ayahLength : current)}</span><span>{fmt(gap ? ayahLength : duration)}</span></div>

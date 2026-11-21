@@ -21,6 +21,7 @@
 		"gen:icons": "node scripts/generate-icons.mjs"
 	},
 	"devDependencies": {
+		"@axe-core/playwright": "^4.14.0",
 		"@inlang/paraglide-js": "^3.2.2",
 		"@playwright/test": "^1.49.1",
 		"@sveltejs/adapter-static": "^4.0.1",
