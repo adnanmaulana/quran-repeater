@@ -22,8 +22,8 @@ export type DownloadDeps = {
 	openCache: () => Promise<CacheLike>;
 	fetcher: typeof fetch;
 	urlFor: (reciterId: string, ref: Ref) => string;
-	/** Save the surah texts for offline reading; failures don't stop the audio download. */
-	saveText?: (surahs: number[]) => Promise<unknown>;
+	/** Save the surah texts (and word timings) for offline use; failures don't stop the audio download. */
+	saveText?: (surahs: number[], reciterId: string) => Promise<unknown>;
 	concurrency?: number;
 	/** Rough size per ayah for the estimate before any file has arrived. */
 	bytesPerAyah?: (reciterId: string) => number;
@@ -115,7 +115,7 @@ export class DownloadManager {
 			bytes: 0,
 			estimate: (this.files.length - done) * (this.deps.bytesPerAyah?.(reciterId) ?? 200_000)
 		};
-		this.deps.saveText?.(surahsOf(items)).catch(() => {});
+		this.deps.saveText?.(surahsOf(items), reciterId).catch(() => {});
 		await this.run();
 	}
 
