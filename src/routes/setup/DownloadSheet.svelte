@@ -92,15 +92,15 @@
 			</div>
 			<div class="titles">
 				<h2 id="dl-title">{heading}</h2>
-				{#if job}
-					<p>
+				<p>
+					{#if job}
 						{m.dl_meta({
 							reciter: reciter(reciterId).name,
 							files: m.dl_files({ done: job.done, total: job.total }),
 							size: `≈ ${formatBytes(job.bytes)} / ${formatBytes(job.estimate)}`
 						})}
-					</p>
-				{/if}
+					{/if}
+				</p>
 			</div>
 		</div>
 
@@ -234,10 +234,14 @@
 		letter-spacing: -0.01em;
 	}
 	.titles p {
+		/* Two lines reserved so the sheet height (and the buttons under a thumb) never jumps as
+		   the size text changes. */
+		min-height: calc(13px * 1.45 * 2);
 		margin: 0;
 		font-size: 13px;
 		line-height: 1.45;
 		color: var(--muted);
+		font-variant-numeric: tabular-nums;
 	}
 	.items {
 		margin: 22px 0 0;
