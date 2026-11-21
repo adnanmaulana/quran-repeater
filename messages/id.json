@@ -187,5 +187,19 @@
 	"preview_reciter": "Dengarkan contoh {name}",
 	"stop_preview": "Hentikan contoh {name}",
 	"no_reciters": "Tidak ada qari yang cocok",
-	"reciter_filters": "Saring qari"
+	"reciter_filters": "Saring qari",
+	"reading": "Bacaan",
+	"translation": "Terjemahan",
+	"tr_follow": "Sama dengan bahasa aplikasi",
+	"tr_sahih": "Sahih International (Inggris)",
+	"tr_kemenag": "Kementerian Agama RI (Indonesia)",
+	"arabic_size": "Ukuran teks Arab",
+	"size_s": "Kecil",
+	"size_m": "Sedang",
+	"size_l": "Besar",
+	"theme": "Tema",
+	"theme_system": "Sistem",
+	"theme_light": "Terang",
+	"theme_dark": "Gelap",
+	"about_sources": "Teks dari AlQuran.cloud, audio dari EveryAyah. Semua yang kamu simpan tetap di perangkat ini."
 }

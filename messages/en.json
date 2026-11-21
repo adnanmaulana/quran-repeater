@@ -187,5 +187,19 @@
 	"preview_reciter": "Preview {name}",
 	"stop_preview": "Stop preview of {name}",
 	"no_reciters": "No reciters match",
-	"reciter_filters": "Filter reciters"
+	"reciter_filters": "Filter reciters",
+	"reading": "Reading",
+	"translation": "Translation",
+	"tr_follow": "Same as app language",
+	"tr_sahih": "Sahih International (English)",
+	"tr_kemenag": "Kementerian Agama RI (Indonesian)",
+	"arabic_size": "Arabic text size",
+	"size_s": "Small",
+	"size_m": "Medium",
+	"size_l": "Large",
+	"theme": "Theme",
+	"theme_system": "System",
+	"theme_light": "Light",
+	"theme_dark": "Dark",
+	"about_sources": "Text from AlQuran.cloud, audio from EveryAyah. Everything you save stays on this device."
 }
