@@ -16,19 +16,18 @@ test.describe('phone', () => {
 test.describe('desktop', () => {
 	test.use({ viewport: { width: 1280, height: 800 }, isMobile: false, hasTouch: false });
 
-	test('side rail that stays visible while selecting; content in a centred column', async ({ page }) => {
+	test('same bottom navigation as on phones; content in a centred column', async ({ page }) => {
 		await page.goto('/');
 		const nav = page.getByRole('navigation', { name: 'Main' });
 		const box = (await nav.boundingBox())!;
-		expect(box.x).toBe(0);
-		expect(box.height).toBeGreaterThan(box.width); // a vertical rail
+		expect(box.width).toBe(1280); // a full-width horizontal bar…
+		expect(box.y + box.height).toBeCloseTo(800, 0); // …at the bottom
 		const list = (await page.locator('.list').boundingBox())!;
 		expect(list.width).toBeLessThanOrEqual(640);
-		expect(list.x).toBeGreaterThan(box.width); // beside the rail, not under it
+		expect(list.x + list.width / 2).toBeCloseTo(640, -1); // centred
 
 		await page.getByRole('button', { name: 'Select' }).click();
-		await expect(nav).toBeVisible();
-		const bar = (await page.getByRole('region', { name: /selected/ }).boundingBox())!;
-		expect(bar.x).toBeGreaterThanOrEqual(box.width);
+		await expect(nav).toBeHidden();
+		await expect(page.getByRole('region', { name: /selected/ })).toBeVisible();
 	});
 });

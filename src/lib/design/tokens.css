@@ -47,8 +47,7 @@
 	--gutter: 20px;
 	--tap: 44px;
 	--nav-h: 76px;
-	/* Width of the side navigation rail on tablets and desktops (≥ 768px). */
-	--rail-w: 96px;
+	/* Width of the centred content column on tablets and desktops (≥ 768px). */
 	--column: 640px;
 
 	color-scheme: light;
