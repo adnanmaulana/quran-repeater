@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { slideInUp, slideOutDown } from '#lib/motion/transitions.js';
+
 	let {
 		title,
 		meta,
@@ -8,7 +10,7 @@
 	}: { title: string; meta: string; action: string; disabled?: boolean; onaction: () => void } = $props();
 </script>
 
-<div class="bar" role="region" aria-label={title} aria-live="polite">
+<div class="bar" role="region" in:slideInUp out:slideOutDown aria-label={title} aria-live="polite">
 	<span class="text">
 		<span class="title">{title}</span>
 		<span class="meta">{meta}</span>
