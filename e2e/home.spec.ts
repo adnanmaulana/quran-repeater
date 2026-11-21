@@ -55,9 +55,21 @@ test('custom range can span surahs', async ({ page }) => {
 	await page.getByRole('combobox', { name: 'To surah' }).fill('80');
 	await page.keyboard.press('Enter');
 	await expect(page.getByRole('combobox', { name: 'To surah' })).toHaveValue("80 · 'Abasa");
-	await page.getByLabel('To ayah').fill('42');
-	await page.getByLabel('To ayah').blur();
+	await page.getByLabel('To ayah').selectOption('42');
 	await expect(page.locator('.summary')).toHaveText('3 surahs · 128 ayat');
+});
+
+test('custom range ayah dropdowns only offer ayat that exist', async ({ page }) => {
+	await page.goto('/');
+	await page.getByRole('tab', { name: 'Custom ayat' }).click();
+	await page.getByRole('combobox', { name: 'From surah' }).fill('112');
+	await page.keyboard.press('Enter');
+	// Al-Ikhlas has 4 ayat; the end moves into the new surah with it.
+	await expect(page.getByLabel('From ayah').locator('option')).toHaveText(['1', '2', '3', '4']);
+	await page.getByLabel('From ayah').selectOption('3');
+	// In the same surah, the end can't come before the start.
+	await expect(page.getByLabel('To ayah').locator('option')).toHaveText(['3', '4']);
+	await expect(page.locator('.summary')).toHaveText('2 ayat');
 });
 
 test('switching to Indonesian is instant and remembered', async ({ page }) => {
