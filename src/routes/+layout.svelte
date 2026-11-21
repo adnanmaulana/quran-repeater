@@ -5,6 +5,9 @@
 	import { restoreSession } from '#lib/player/player.svelte.js';
 	import { initInstall } from '#lib/pwa/install.svelte.js';
 	import { applyDocumentSettings, settings } from '#lib/stores/settings.svelte.js';
+	import { installSpringTokens } from '#lib/motion/spring.js';
+	import { reducedMotion } from '#lib/motion/transitions.js';
+	import { onNavigate } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import type { LayoutProps } from './$types';
 
@@ -18,8 +21,23 @@
 	const theme = $derived(settings.value.theme);
 	onMount(() => {
 		document.getElementById('splash')?.remove(); // the app is on screen now
+		installSpringTokens();
 		restoreSession();
 		initInstall();
+	});
+
+	// Moving between screens cross-fades through the View Transitions API: the browser animates
+	// snapshots on the compositor, so no component re-renders mid-animation. Query-only changes
+	// (tabs, search) stay instant; unsupported browsers just navigate.
+	onNavigate((nav) => {
+		if (!document.startViewTransition || reducedMotion()) return;
+		if (!nav.to || nav.from?.url.pathname === nav.to.url.pathname) return;
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await nav.complete;
+			});
+		});
 	});
 </script>
 
