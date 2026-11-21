@@ -26,6 +26,11 @@ playlists and settings stay on the device.
   requests work, so files can be cached for offline playback. (`cdn.islamic.network` sends no CORS
   header, so it is not used.) Ayah-1 files do not include the Basmalah; the player plays `001001`
   before ayah 1 of every surah except 1 and 9.
+- **Word timings:** Quran.com — `GET https://api.quran.com/api/v4/recitations/{id}/by_chapter/{n}?fields=segments`.
+  Segments are `[segment, word (1-based), start ms, end ms]` and may repeat words. Its files are
+  byte-identical to EveryAyah's for 6 of our reciters (`timingsId` in `reciters.ts`); Ghamdi and
+  Muaiqly have none, so their lines advance on an estimate and words are not coloured. Word numbers
+  match `quran-uthmani` once pause marks join the word before and ۞ the word after (37:130 aside).
 - **Bundled:** `src/lib/data/surahs.json` and `juz.json`, generated once by
   `scripts/generate-metadata.mjs`, so lists render with no network call.
 
@@ -75,7 +80,7 @@ code is split per route.
   3 s fallback to the cached app.
 - Downloads go to the `qr-audio-v1` cache; the service worker serves EveryAyah requests from it,
   answering HTTP Range requests with 206 (iOS Safari needs this for media).
-- Surah text is kept in IndexedDB; a download also saves the text of its surahs.
+- Surah text and word timings are kept in IndexedDB; a download also saves both for its surahs.
 
 ## Open checks
 
