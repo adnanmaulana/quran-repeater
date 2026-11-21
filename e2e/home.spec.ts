@@ -55,21 +55,40 @@ test('custom range can span surahs', async ({ page }) => {
 	await page.getByRole('combobox', { name: 'To surah' }).fill('80');
 	await page.keyboard.press('Enter');
 	await expect(page.getByRole('combobox', { name: 'To surah' })).toHaveValue("80 · 'Abasa");
-	await page.getByLabel('To ayah').selectOption('42');
+	const toAyah = page.getByRole('combobox', { name: 'To ayah' });
+	await toAyah.fill('42');
+	await toAyah.blur();
+	await expect(toAyah).toHaveValue('42');
 	await expect(page.locator('.summary')).toHaveText('3 surahs · 128 ayat');
 });
 
-test('custom range ayah dropdowns only offer ayat that exist', async ({ page }) => {
+test('custom range ayah pickers take typed numbers or a pick, but only ayat that exist', async ({ page }) => {
 	await page.goto('/');
 	await page.getByRole('tab', { name: 'Custom ayat' }).click();
 	await page.getByRole('combobox', { name: 'From surah' }).fill('112');
 	await page.keyboard.press('Enter');
-	// Al-Ikhlas has 4 ayat; the end moves into the new surah with it.
-	await expect(page.getByLabel('From ayah').locator('option')).toHaveText(['1', '2', '3', '4']);
-	await page.getByLabel('From ayah').selectOption('3');
+	const fromAyah = page.getByRole('combobox', { name: 'From ayah' });
+	const toAyah = page.getByRole('combobox', { name: 'To ayah' });
+
+	// Al-Ikhlas has 4 ayat: the list offers just those.
+	await fromAyah.click();
+	await expect(page.getByRole('option')).toHaveText(['1', '2', '3', '4']);
+	await page.getByRole('option', { name: '3' }).click();
+	await expect(fromAyah).toHaveValue('3');
+
 	// In the same surah, the end can't come before the start.
-	await expect(page.getByLabel('To ayah').locator('option')).toHaveText(['3', '4']);
-	await expect(page.locator('.summary')).toHaveText('2 ayat');
+	await toAyah.click();
+	await expect(page.getByRole('option')).toHaveText(['3', '4']);
+	await page.keyboard.press('Escape');
+
+	// Typing works; a number the surah doesn't have puts the last choice back.
+	await fromAyah.fill('9');
+	await fromAyah.blur();
+	await expect(fromAyah).toHaveValue('3');
+	await fromAyah.fill('2');
+	await page.keyboard.press('Enter');
+	await expect(fromAyah).toHaveValue('2');
+	await expect(page.locator('.summary')).toHaveText('3 ayat');
 });
 
 test('switching to Indonesian is instant and remembered', async ({ page }) => {
