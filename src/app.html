@@ -5,7 +5,57 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 		<meta name="text-scale" content="scale" />
 		<meta name="description" content="Repeat the Quran by surah, juz, custom ayat or playlists — in the background and offline." />
+		<link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
 		<link rel="manifest" href="%sveltekit.assets%/manifest.webmanifest" />
+		<!-- The UI font starts downloading with the HTML (copied by npm run gen:fonts). Amiri is not
+		     preloaded: it is 106 KB and would compete with the app's JavaScript on slow networks; it
+		     loads as soon as Arabic text appears. -->
+		<link rel="preload" href="%sveltekit.assets%/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin />
+		<style>
+			@font-face {
+				font-family: 'Inter Variable';
+				font-style: normal;
+				font-weight: 100 900;
+				font-display: swap;
+				src: url('%sveltekit.assets%/fonts/inter-latin-wght.woff2') format('woff2-variations'), url('%sveltekit.assets%/fonts/inter-latin-wght.woff2') format('woff2');
+				unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+			}
+			@font-face {
+				font-family: 'Amiri';
+				font-style: normal;
+				font-weight: 400;
+				font-display: swap;
+				src: url('%sveltekit.assets%/fonts/amiri-arabic-400.woff2') format('woff2');
+				unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+			}
+			/* App shell, shown until the app mounts. */
+			#splash {
+				position: fixed;
+				inset: 0;
+				z-index: 100;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 16px;
+				background: #f3f5f4;
+				color: #10201b;
+				font: 700 26px/1.2 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+				letter-spacing: -0.02em;
+			}
+			#splash img {
+				border-radius: 18px;
+			}
+			#splash p {
+				margin: 0;
+			}
+			@media (prefers-color-scheme: dark) {
+				#splash {
+					background: #0b1512;
+					color: #eef2f0;
+				}
+			}
+		</style>
 		<link rel="apple-touch-icon" href="%sveltekit.assets%/icons/apple-touch-icon.png" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="mobile-web-app-capable" content="yes" />
@@ -14,6 +64,12 @@
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
+		<!-- App shell: painted straight from the HTML while the app's JavaScript loads (removed on
+		     mount). Only the brand, which reads the same in every language. -->
+		<div id="splash" aria-hidden="true">
+			<img src="%sveltekit.assets%/favicon.svg" alt="" width="72" height="72" />
+			<p>Quran Repeater</p>
+		</div>
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>

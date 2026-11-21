@@ -1,9 +1,6 @@
 <script lang="ts">
-	import '@fontsource-variable/inter';
-	import '@fontsource/amiri/arabic-400.css';
 	import '#lib/design/tokens.css';
 	import '#lib/design/global.css';
-	import favicon from '#lib/assets/favicon.svg';
 	import { i18n } from '#lib/i18n.svelte.js';
 	import { restoreSession } from '#lib/player/player.svelte.js';
 	import { initInstall } from '#lib/pwa/install.svelte.js';
@@ -15,13 +12,13 @@
 
 	$effect(() => applyDocumentSettings(settings.value));
 	onMount(() => {
+		document.getElementById('splash')?.remove(); // the app is on screen now
 		restoreSession();
 		initInstall();
 	});
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
 	<meta name="theme-color" content="#0A6B57" media="(prefers-color-scheme: light)" />
 	<meta name="theme-color" content="#0B1512" media="(prefers-color-scheme: dark)" />
 	<title>Quran Repeater</title>
