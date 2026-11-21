@@ -1,4 +1,3 @@
-import favicon from '#lib/assets/favicon.svg';
 import { surah } from '#lib/data/quran.js';
 import { audioUrl, reciter } from '#lib/data/reciters.js';
 import { title } from '#lib/format.js';
@@ -54,7 +53,7 @@ function describe(s: Snapshot) {
 		title: `${surah(s.ref.s).name} · ${s.ref.s}:${s.ref.a}`,
 		artist: reciter(s.config.reciterId).name,
 		album: title(item),
-		artwork: new URL(favicon, location.href).href
+		artwork: new URL('/icons/icon-512.png', location.href).href
 	};
 }
 

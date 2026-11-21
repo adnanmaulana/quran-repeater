@@ -1,0 +1,19 @@
+{
+	"id": "/",
+	"name": "Quran Repeater",
+	"short_name": "Quran Repeater",
+	"description": "Repeat the Quran by surah, juz, custom ayat or playlists, with your chosen reciter, in the background and offline.",
+	"lang": "en",
+	"start_url": "/",
+	"scope": "/",
+	"display": "standalone",
+	"orientation": "portrait",
+	"background_color": "#F3F5F4",
+	"theme_color": "#0A6B57",
+	"categories": ["education", "books", "lifestyle"],
+	"icons": [
+		{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+		{ "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+		{ "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+	]
+}
