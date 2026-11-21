@@ -41,6 +41,26 @@ export const downloadActions = {
 	estimateBytes: (count: number, reciterId: string) => count * bytesPerAyah(reciterId)
 };
 
+/** Files and bytes in the download cache. */
+export async function downloadedSummary(): Promise<{ files: number; bytes: number }> {
+	try {
+		const cache = await caches.open(AUDIO_CACHE);
+		const reqs = await cache.keys();
+		let bytes = 0;
+		for (const r of reqs) bytes += Number((await cache.match(r))?.headers.get('Content-Length') ?? 0);
+		return { files: reqs.length, bytes };
+	} catch {
+		return { files: 0, bytes: 0 };
+	}
+}
+
+/** Delete every downloaded recitation (the app shell cache is untouched). */
+export async function removeAllDownloads() {
+	downloadActions.cancel();
+	await caches.delete(AUDIO_CACHE);
+	manager = null; // its in-memory index of saved files is now stale
+}
+
 /** Space used by this app on the device (all caches and IndexedDB), when the browser reports it. */
 export async function storageUsage(): Promise<number | null> {
 	try {
