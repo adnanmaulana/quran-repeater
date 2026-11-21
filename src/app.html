@@ -11,6 +11,18 @@
 		     preloaded: it is 106 KB and would compete with the app's JavaScript on slow networks; it
 		     loads as soon as Arabic text appears. -->
 		<link rel="preload" href="%sveltekit.assets%/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin />
+		<script>
+			// Apply the saved theme and Arabic size before the first paint (no flash of the wrong
+			// theme). Mirrors applyDocumentSettings(); light is the default.
+			try {
+				var s = (JSON.parse(localStorage.getItem('qr.settings')) || {}).data || {};
+				var t = s.theme || 'light';
+				if (t !== 'system') document.documentElement.dataset.theme = t;
+				if (s.arSize) document.documentElement.dataset.arSize = s.arSize;
+			} catch (e) {
+				document.documentElement.dataset.theme = 'light';
+			}
+		</script>
 		<style>
 			@font-face {
 				font-family: 'Inter Variable';
@@ -38,8 +50,8 @@
 				align-items: center;
 				justify-content: center;
 				gap: 16px;
-				background: #f3f5f4;
-				color: #10201b;
+				background: #f6f7f4;
+				color: #11201b;
 				font: 700 26px/1.2 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
 				letter-spacing: -0.02em;
 			}
@@ -49,10 +61,14 @@
 			#splash p {
 				margin: 0;
 			}
+			[data-theme='dark'] #splash {
+				background: #0c1110;
+				color: #edf1ef;
+			}
 			@media (prefers-color-scheme: dark) {
-				#splash {
-					background: #0b1512;
-					color: #eef2f0;
+				:root:not([data-theme]) #splash {
+					background: #0c1110;
+					color: #edf1ef;
 				}
 			}
 		</style>

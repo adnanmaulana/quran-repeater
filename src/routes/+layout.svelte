@@ -11,6 +11,11 @@
 	let { children }: LayoutProps = $props();
 
 	$effect(() => applyDocumentSettings(settings.value));
+
+	// Browser chrome (status bar) matches the page background of the theme in use.
+	const LIGHT_BG = '#f6f7f4';
+	const DARK_BG = '#0c1110';
+	const theme = $derived(settings.value.theme);
 	onMount(() => {
 		document.getElementById('splash')?.remove(); // the app is on screen now
 		restoreSession();
@@ -19,8 +24,12 @@
 </script>
 
 <svelte:head>
-	<meta name="theme-color" content="#0A6B57" media="(prefers-color-scheme: light)" />
-	<meta name="theme-color" content="#0B1512" media="(prefers-color-scheme: dark)" />
+	{#if theme === 'system'}
+		<meta name="theme-color" content={LIGHT_BG} media="(prefers-color-scheme: light)" />
+		<meta name="theme-color" content={DARK_BG} media="(prefers-color-scheme: dark)" />
+	{:else}
+		<meta name="theme-color" content={theme === 'dark' ? DARK_BG : LIGHT_BG} />
+	{/if}
 	<title>Quran Repeater</title>
 </svelte:head>
 

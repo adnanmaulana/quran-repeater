@@ -36,7 +36,7 @@ test('Arabic size and theme apply to the page and are remembered', async ({ page
 
 test('every screen is in Indonesian when the app is', async ({ page }) => {
 	await page.goto('/settings');
-	await page.getByText('Bahasa Indonesia').click();
+	await page.getByText('Bahasa Indonesia', { exact: true }).click();
 	for (const [path, heading] of [
 		['/history', 'Riwayat'],
 		['/playlists', 'Daftar putar'],
@@ -57,4 +57,17 @@ test.describe('first visit', () => {
 		await expect(page.locator('html')).toHaveAttribute('lang', 'id');
 		await expect(page.getByPlaceholder('Nama atau nomor')).toBeVisible();
 	});
+});
+
+test('light by default; the header button switches theme and is remembered', async ({ page }) => {
+	await page.emulateMedia({ colorScheme: 'dark' }); // the device preference does not matter
+	await page.goto('/');
+	const html = page.locator('html');
+	await expect(html).toHaveAttribute('data-theme', 'light');
+	await page.getByRole('button', { name: 'Switch to dark mode' }).click();
+	await expect(html).toHaveAttribute('data-theme', 'dark');
+	await page.reload();
+	await expect(html).toHaveAttribute('data-theme', 'dark');
+	await page.getByRole('button', { name: 'Switch to light mode' }).click();
+	await expect(html).toHaveAttribute('data-theme', 'light');
 });
