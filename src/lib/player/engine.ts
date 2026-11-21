@@ -99,7 +99,11 @@ export class AudioEngine {
 		else this.play();
 	}
 
-	next = () => this.jump(nextAyah);
+	/** Next ayah; during the Basmalah clip, skip just the clip and go to the ayah it introduces. */
+	next = () => {
+		if (this.phase === 'basmalah' && this.pos) return this.load(this.pos, this.isActive(), 'ayah');
+		this.jump(nextAyah);
+	};
 	prev = () => this.jump(prevAyah);
 	nextItem = () => this.jump(nextItem);
 	prevItem = () => this.jump(prevItem);
@@ -107,7 +111,7 @@ export class AudioEngine {
 	/** Jump to an ayah of the current item (index within the item), first repeat. */
 	jumpToAyah(ayah: number) {
 		if (!this.pos) return;
-		this.load({ ...this.pos, ayah, rep: 0 }, this.isActive());
+		this.load({ ...this.pos, ayah, rep: 0 }, this.isActive(), 'ayah');
 	}
 
 	setSpeed(speed: number) {
@@ -138,10 +142,14 @@ export class AudioEngine {
 		return this.state === 'playing' || this.state === 'loading';
 	}
 
+	/**
+	 * Manual navigation lands on the ayah itself: the Basmalah clip only plays when a surah begins
+	 * naturally (at the start, or when playback flows into it).
+	 */
 	private jump(step: (cfg: RepeatConfig, pos: Position) => Position | null) {
 		if (!this.cfg || !this.pos) return;
 		const to = step(this.cfg, this.pos);
-		if (to) this.load(to, this.isActive() || this.state === 'ended');
+		if (to) this.load(to, this.isActive() || this.state === 'ended', 'ayah');
 	}
 
 	private load(pos: Position, autoplay: boolean, phase?: Phase) {

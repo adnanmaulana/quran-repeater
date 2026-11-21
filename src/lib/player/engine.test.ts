@@ -114,6 +114,31 @@ describe('AudioEngine controls', () => {
 		expect(snap().ref).toEqual({ s: 1, a: 1 });
 	});
 
+	it('next during the Basmalah skips only the Basmalah', () => {
+		const { engine, snap, audio } = setup(config({ items: [range(112, 1, 112, 4)] }));
+		expect(snap().phase).toBe('basmalah');
+		engine.next();
+		expect(snap()).toMatchObject({ phase: 'ayah', ref: { s: 112, a: 1 } });
+		expect(audio.sources.at(-1)).toBe('112:1');
+	});
+
+	it('manual navigation to ayah 1 does not replay the Basmalah', () => {
+		const { engine, snap, audio } = setup(config({ items: [range(112, 1, 112, 4)] }));
+		engine.next(); // skip Basmalah → 112:1
+		engine.next(); // 112:2
+		engine.prev(); // back to 112:1
+		expect(snap()).toMatchObject({ phase: 'ayah', ref: { s: 112, a: 1 } });
+		engine.jumpToAyah(0);
+		expect(snap().phase).toBe('ayah');
+		expect(audio.sources.filter((s) => s === '1:1')).toHaveLength(1); // only the initial one
+	});
+
+	it('the Basmalah plays when playback flows into a new surah', () => {
+		const { audio, runAll } = setup(config({ items: [range(113, 5, 114, 1)] }));
+		runAll();
+		expect(audio.sources).toEqual(['113:5', '1:1', '114:1']);
+	});
+
 	it('pause and play keep the position; jumping while paused stays paused', () => {
 		const { engine, snap, audio } = setup(cfg);
 		engine.pause();
