@@ -5,9 +5,12 @@
 	import '#lib/design/global.css';
 	import favicon from '#lib/assets/favicon.svg';
 	import { i18n } from '#lib/i18n.svelte.js';
+	import { applyDocumentSettings, settings } from '#lib/stores/settings.svelte.js';
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
+
+	$effect(() => applyDocumentSettings(settings.value));
 </script>
 
 <svelte:head>
