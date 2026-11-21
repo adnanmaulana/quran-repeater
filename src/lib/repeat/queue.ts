@@ -1,5 +1,5 @@
 import { fromGlobal, globalIndex, type Ref } from '#lib/data/quran.js';
-import { itemAyat, type RepeatConfig } from './types.js';
+import { itemAyat, type Item, type RepeatConfig } from './types.js';
 
 /**
  * Where playback is inside a repeat config. Nesting, outermost first:
@@ -26,13 +26,27 @@ export function isPlayable(cfg: QueueConfig): boolean {
 
 /** Plays in one pass over the whole list. */
 export function playsPerListLoop(cfg: QueueConfig): number {
-	return cfg.items.reduce((a, it) => a + itemAyat(it) * it.loops, 0) * cfg.perAyah;
+	return cfg.items.reduce((a, it) => a + playsPerItemLoop(cfg, it) * it.loops, 0);
 }
 
 /** Total plays, or null when the list loops forever. */
 export function totalPlays(cfg: QueueConfig): number | null {
 	return cfg.listLoops === 'infinite' ? null : playsPerListLoop(cfg) * cfg.listLoops;
 }
+
+/** Al-Fatihah 1 is the Basmalah: it is recited once each time the surah starts, never repeated. */
+const isFatihahBasmalah = (ref: Ref) => ref.s === 1 && ref.a === 1;
+
+/** Times this ayah plays before moving on. */
+export function repsOf(cfg: Pick<QueueConfig, 'perAyah'>, ref: Ref): number {
+	return isFatihahBasmalah(ref) ? 1 : cfg.perAyah;
+}
+
+/** Repeats an item would add for Al-Fatihah 1 but skips (it starts at 1:1 when it contains it). */
+const skippedReps = (cfg: QueueConfig, item: Item) => (isFatihahBasmalah(item.start) ? cfg.perAyah - 1 : 0);
+
+/** Plays in one loop of an item. */
+const playsPerItemLoop = (cfg: QueueConfig, item: Item) => itemAyat(item) * cfg.perAyah - skippedReps(cfg, item);
 
 const listLoopsDone = (cfg: QueueConfig, listLoop: number) => cfg.listLoops !== 'infinite' && listLoop >= cfg.listLoops;
 
@@ -45,15 +59,16 @@ export function playAt(cfg: QueueConfig, pos: Position): Play {
 /** 0-based ordinal of a position in the whole run (for progress bars and resume checks). */
 export function playIndex(cfg: QueueConfig, pos: Position): number {
 	let n = pos.listLoop * playsPerListLoop(cfg);
-	for (let i = 0; i < pos.item; i++) n += itemAyat(cfg.items[i]) * cfg.items[i].loops * cfg.perAyah;
-	n += pos.itemLoop * itemAyat(cfg.items[pos.item]) * cfg.perAyah;
-	return n + pos.ayah * cfg.perAyah + pos.rep;
+	for (let i = 0; i < pos.item; i++) n += playsPerItemLoop(cfg, cfg.items[i]) * cfg.items[i].loops;
+	const item = cfg.items[pos.item];
+	n += pos.itemLoop * playsPerItemLoop(cfg, item);
+	return n + pos.ayah * cfg.perAyah - (pos.ayah > 0 ? skippedReps(cfg, item) : 0) + pos.rep;
 }
 
 /** The play after `pos`, or null at the end of the run. */
 export function next(cfg: QueueConfig, pos: Position): Position | null {
 	const p = { ...pos };
-	if (++p.rep < cfg.perAyah) return p;
+	if (++p.rep < repsOf(cfg, playAt(cfg, p).ref)) return p;
 	p.rep = 0;
 	return nextAyah(cfg, p);
 }

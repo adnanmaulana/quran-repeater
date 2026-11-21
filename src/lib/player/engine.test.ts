@@ -87,11 +87,14 @@ describe('AudioEngine playback order', () => {
 
 	it('reports position and progress', () => {
 		const { audio, snap } = setup(config({ items: [range(1, 1, 1, 7)], perAyah: 3 }));
-		expect(snap()).toMatchObject({ state: 'playing', phase: 'ayah', ref: { s: 1, a: 1 }, index: 0, total: 21 });
+		// Al-Fatihah 1 is the Basmalah: it plays once, the other six ayat three times each.
+		expect(snap()).toMatchObject({ state: 'playing', phase: 'ayah', ref: { s: 1, a: 1 }, index: 0, total: 19 });
+		audio.end();
+		expect(snap()).toMatchObject({ ref: { s: 1, a: 2 }, index: 1 });
 		audio.end();
 		audio.end();
 		audio.end();
-		expect(snap()).toMatchObject({ ref: { s: 1, a: 2 }, index: 3 });
+		expect(snap()).toMatchObject({ ref: { s: 1, a: 3 }, index: 4 });
 	});
 
 	it('prefetches the next plays, including the Basmalah clip', () => {
@@ -159,7 +162,7 @@ describe('AudioEngine controls', () => {
 		const audio = new FakeAudio();
 		const engine = new AudioEngine({ audio: audio as unknown as AudioLike, loader: new FakeLoader(), urlFor: url, silence: () => '' });
 		engine.start(cfg, { listLoop: 0, item: 0, itemLoop: 0, ayah: 2, rep: 1 }, false);
-		expect(engine.snapshot()).toMatchObject({ state: 'paused', ref: { s: 1, a: 3 }, index: 7 });
+		expect(engine.snapshot()).toMatchObject({ state: 'paused', ref: { s: 1, a: 3 }, index: 5 }); // 1:1 once, 1:2 three times, then 1:3's second repeat
 		expect(audio.sources).toEqual([]);
 	});
 

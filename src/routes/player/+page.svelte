@@ -6,6 +6,7 @@
 	import { title } from '#lib/format.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { actions, player } from '#lib/player/player.svelte.js';
+	import { repsOf } from '#lib/repeat/queue.js';
 	import AyahStrip from './AyahStrip.svelte';
 	import AyahText from './AyahText.svelte';
 	import Progress from './Progress.svelte';
@@ -61,7 +62,7 @@
 		</div>
 	{:else}
 		<div class="chips">
-			<span class="chip"><Icon name="repeat" size={14} stroke={2.2} />{m.repeat_of({ n: pos.rep + 1, total: cfg.perAyah })}</span>
+			<span class="chip"><Icon name="repeat" size={14} stroke={2.2} />{m.repeat_of({ n: pos.rep + 1, total: repsOf(cfg, snap.ref) })}</span>
 			<span class="chip">
 				{cfg.listLoops === 'infinite' ? m.loop_n({ n: pos.listLoop + 1 }) : m.loop_of({ n: pos.listLoop + 1, total: cfg.listLoops })}
 			</span>
