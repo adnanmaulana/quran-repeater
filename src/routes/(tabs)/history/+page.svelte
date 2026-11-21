@@ -110,7 +110,8 @@
 		flex-direction: column-reverse;
 		gap: 2px;
 		padding: 12px;
-		border: 1px solid var(--line);
+		border: 1px solid transparent;
+		box-shadow: var(--shadow-card);
 		border-radius: 16px;
 		background: var(--surface);
 	}
@@ -144,7 +145,8 @@
 		flex-direction: column;
 		gap: 10px;
 		padding: 14px;
-		border: 1px solid var(--line);
+		border: 1px solid transparent;
+		box-shadow: var(--shadow-card);
 		border-radius: var(--r-lg);
 		background: var(--surface);
 	}

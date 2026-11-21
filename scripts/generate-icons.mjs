@@ -4,7 +4,7 @@ import { mkdir } from 'node:fs/promises';
 import { chromium } from '@playwright/test';
 
 const OUT = new URL('../static/icons/', import.meta.url);
-const GREEN = '#0A6B57';
+const GREEN = '#0B7A5E';
 
 // The repeat glyph from the favicon, on a 64-unit grid.
 const glyph = `<g fill="none" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">

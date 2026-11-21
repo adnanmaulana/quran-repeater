@@ -146,7 +146,7 @@
 		color: var(--ink);
 	}
 	dialog::backdrop {
-		background: rgb(14 29 25 / 0.5);
+		background: var(--scrim);
 	}
 	@media (min-width: 768px) {
 		dialog {
