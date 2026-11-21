@@ -159,5 +159,20 @@
 	"loop_forever_short": "loop forever",
 	"title_more": "{title} + {count} more",
 	"continue": "Continue",
-	"progress_loops": "{n} loops"
+	"progress_loops": "{n} loops",
+	"save_playlist": "Save as playlist",
+	"save_changes": "Save changes",
+	"playlist_name": "Playlist name",
+	"save": "Save",
+	"saved": "Saved",
+	"new_playlist": "New",
+	"playlists_empty": "No playlists yet",
+	"playlists_empty_hint": "Set up a repeat and tap “Save as playlist” to play it again in one tap.",
+	"play_playlist": "Play {name}",
+	"edit_playlist": "Edit {name}",
+	"delete_playlist": "Delete {name}",
+	"delete_playlist_confirm": "Delete “{name}”? Your history and downloads stay.",
+	"download_size": "Download · ≈ {size}",
+	"played_when": "Played {when}",
+	"not_played": "Not played yet"
 }

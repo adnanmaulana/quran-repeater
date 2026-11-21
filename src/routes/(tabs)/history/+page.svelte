@@ -10,6 +10,7 @@
 	import { i18n } from '#lib/i18n.svelte.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { actions } from '#lib/player/player.svelte.js';
+	import { playlists } from '#lib/playlists/playlists.svelte.js';
 
 	const list = $derived(history.value);
 	const groups = $derived(groupByDay(list));
@@ -19,7 +20,8 @@
 	const time = (ts: number) => new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(ts);
 	const day = (ts: number) => new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'short' }).format(ts);
 
-	const name = (e: HistoryEntry) => playlistTitle(e.config.items);
+	/** A session started from a saved playlist shows the playlist's name. */
+	const name = (e: HistoryEntry) => (e.playlistId && playlists.value.find((p) => p.id === e.playlistId)?.name) || playlistTitle(e.config.items);
 
 	function progressLabel(e: HistoryEntry) {
 		if (e.config.listLoops === 'infinite') return m.progress_loops({ n: loopsDone(e) });
