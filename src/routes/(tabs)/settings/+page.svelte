@@ -1,11 +1,13 @@
 <script lang="ts">
-	import ComingSoon from '#lib/components/ComingSoon.svelte';
+	import ChipGroup from '#lib/components/ChipGroup.svelte';
 	import ScreenHeader from '#lib/components/ScreenHeader.svelte';
 	import { i18n, locales, type Locale } from '#lib/i18n.svelte.js';
 	import Icon from '#lib/design/Icon.svelte';
 	import { downloadedSummary, formatBytes, removeAllDownloads, storageUsage } from '#lib/offline/downloads.svelte.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { install, promptInstall } from '#lib/pwa/install.svelte.js';
+	import { BASMALAH_TEXT } from '#lib/data/text.js';
+	import { settings, type ArSize, type Theme } from '#lib/stores/settings.svelte.js';
 
 	const names: Record<Locale, () => string> = { en: m.lang_en, id: m.lang_id };
 
@@ -18,6 +20,13 @@
 	$effect(() => {
 		refresh();
 	});
+
+	const translations: { value: string | null; label: () => string }[] = [
+		{ value: null, label: m.tr_follow },
+		{ value: 'en.sahih', label: m.tr_sahih },
+		{ value: 'id.indonesian', label: m.tr_kemenag }
+	];
+	const set = <K extends keyof typeof settings.value>(k: K, v: (typeof settings.value)[K]) => settings.update((s) => ({ ...s, [k]: v }));
 
 	async function removeDownloads() {
 		if (!confirm(m.remove_downloads_confirm())) return;
@@ -43,6 +52,47 @@
 		{/each}
 	</div>
 	<p class="hint">{m.follows_device()}</p>
+</section>
+
+<section>
+	<h2 class="eyebrow">{m.reading()}</h2>
+	<div class="group card">
+		<div class="block">
+			<h3 id="tr-heading">{m.translation()}</h3>
+			<div class="group inner" role="radiogroup" aria-labelledby="tr-heading">
+				{#each translations as t (t.value ?? 'follow')}
+					{@const on = settings.value.translation === t.value}
+					<label class="option" class:on>
+						<input type="radio" name="translation" checked={on} onchange={() => set('translation', t.value)} />
+						<span class="name small">{t.label()}</span>
+						<span class="radio" aria-hidden="true"></span>
+					</label>
+				{/each}
+			</div>
+		</div>
+		<div class="block">
+			<h3>{m.arabic_size()}</h3>
+			<p class="ar-preview" lang="ar" dir="rtl">{BASMALAH_TEXT}</p>
+			<ChipGroup
+				label={m.arabic_size()}
+				value={settings.value.arSize}
+				options={(['S', 'M', 'L'] as ArSize[]).map((v) => ({ value: v, label: { S: m.size_s(), M: m.size_m(), L: m.size_l() }[v] }))}
+				onchange={(v) => set('arSize', v)}
+			/>
+		</div>
+		<div class="block">
+			<h3>{m.theme()}</h3>
+			<ChipGroup
+				label={m.theme()}
+				value={settings.value.theme}
+				options={(['system', 'light', 'dark'] as Theme[]).map((v) => ({
+					value: v,
+					label: { system: m.theme_system(), light: m.theme_light(), dark: m.theme_dark() }[v]
+				}))}
+				onchange={(v) => set('theme', v)}
+			/>
+		</div>
+	</div>
 </section>
 
 <section>
@@ -81,7 +131,7 @@
 	{#if usage !== null}<p class="hint">{m.storage_total({ size: formatBytes(usage) })}</p>{/if}
 </section>
 
-<ComingSoon />
+<p class="about">{m.about_sources()}</p>
 
 <style>
 	section {
@@ -180,8 +230,45 @@
 		border: 0;
 		border-radius: 12px;
 		background: var(--accent);
-		color: #fff;
+		color: var(--on-accent);
 		font-weight: 600;
+	}
+	.block {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 14px 16px;
+		border-bottom: 1px solid var(--line-soft);
+	}
+	.block:last-child {
+		border-bottom: 0;
+	}
+	h3 {
+		margin: 0;
+		font-size: 15px;
+		font-weight: 600;
+	}
+	.inner {
+		border-radius: var(--r-md);
+	}
+	.name.small {
+		font-size: 14px;
+		font-weight: 500;
+	}
+	.ar-preview {
+		margin: 0;
+		padding: 8px 12px;
+		border-radius: 12px;
+		background: var(--surface-2);
+		font-family: var(--font-ar);
+		font-size: var(--ar-size);
+		line-height: 1.7;
+		text-align: center;
+	}
+	.about {
+		margin: 18px calc(var(--gutter) + 4px) 0;
+		font-size: 12px;
+		color: var(--muted);
 	}
 	.hint {
 		margin: 8px 4px 0;
