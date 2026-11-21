@@ -1,3 +1,5 @@
+import { track } from '#lib/analytics/analytics.js';
+
 /** Chrome/Edge/Samsung fire this with a prompt we can show later. */
 type BeforeInstallPromptEvent = Event & { prompt(): Promise<void>; userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }> };
 
@@ -26,16 +28,19 @@ export function initInstall() {
 		install.canPrompt = true;
 	});
 	window.addEventListener('appinstalled', () => {
+		track('app_installed');
 		install.installed = true;
 		install.canPrompt = false;
 		deferred = null;
 	});
 }
 
-export async function promptInstall(): Promise<boolean> {
+/** `from`: which button asked (the home banner or Settings). */
+export async function promptInstall(from: 'banner' | 'settings'): Promise<boolean> {
 	if (!deferred) return false;
 	await deferred.prompt();
 	const { outcome } = await deferred.userChoice;
+	track('install_prompt', { from, outcome });
 	deferred = null;
 	install.canPrompt = false;
 	return outcome === 'accepted';

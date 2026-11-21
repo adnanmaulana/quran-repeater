@@ -103,7 +103,7 @@
 		{:else}
 			<div class="line">
 				<span class="text">{m.install_hint()}</span>
-				{#if install.canPrompt}<button type="button" class="action" onclick={promptInstall}>{m.install_button()}</button>{/if}
+				{#if install.canPrompt}<button type="button" class="action" onclick={() => promptInstall('settings')}>{m.install_button()}</button>{/if}
 			</div>
 			{#if !install.canPrompt}<p class="line small">{install.ios ? m.install_ios() : m.install_other()}</p>{/if}
 		{/if}

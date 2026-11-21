@@ -23,7 +23,7 @@
 			<small>{install.canPrompt ? m.install_banner_text() : m.install_ios()}</small>
 		</div>
 		{#if install.canPrompt}
-			<button type="button" class="action" onclick={promptInstall}>{m.install_button()}</button>
+			<button type="button" class="action" onclick={() => promptInstall('banner')}>{m.install_button()}</button>
 		{/if}
 		<button type="button" class="close" onclick={dismiss} aria-label={m.install_dismiss()}>
 			<Icon name="close" size={18} />
