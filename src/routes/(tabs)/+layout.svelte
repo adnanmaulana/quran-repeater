@@ -14,8 +14,7 @@
 	{@render children()}
 </main>
 
-<!-- The nav stays mounted: on phones multi-select hides it (the selection bar takes its place);
-     on wider screens it is a side rail and stays visible. -->
+<!-- The nav stays mounted; multi-select hides it while the selection bar takes its place. -->
 <div class="dock" class:selecting={ui.hideNav}>
 	{#if !ui.hideNav}<MiniPlayer />{/if}
 	<BottomNav />
@@ -43,32 +42,14 @@
 		display: none;
 	}
 
+	/* Tablets and desktops: content and mini player in a centred column; the nav stays at the bottom. */
 	@media (min-width: 768px) {
 		main {
-			max-width: calc(var(--column) + var(--rail-w));
-			padding-left: var(--rail-w);
-			padding-bottom: 48px;
-		}
-		main.with-mini {
-			padding-bottom: 120px;
-		}
-		.dock {
-			left: var(--rail-w);
-			display: flex;
-			justify-content: center;
-			pointer-events: none; /* only the mini player itself takes taps */
+			max-width: var(--column);
 		}
 		.dock :global(.mini) {
-			width: 100%;
 			max-width: var(--column);
-			margin-bottom: 16px;
-			pointer-events: auto;
-		}
-		.dock :global(nav),
-		.dock.selecting :global(nav) {
-			position: fixed;
-			display: flex;
-			pointer-events: auto;
+			margin: 0 auto 8px;
 		}
 	}
 </style>

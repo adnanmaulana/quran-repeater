@@ -50,26 +50,4 @@
 		color: var(--accent);
 	}
 
-	/* Tablets and desktops: a vertical rail on the left. */
-	@media (min-width: 768px) {
-		nav {
-			inset: 0 auto 0 0;
-			display: flex;
-			flex-direction: column;
-			gap: 8px;
-			width: var(--rail-w);
-			height: auto;
-			padding: 24px 0;
-			border-top: 0;
-			border-right: 1px solid var(--line);
-		}
-		a {
-			height: 72px;
-			margin: 0 10px;
-			border-radius: 16px;
-		}
-		a.current {
-			background: var(--accent-tint);
-		}
-	}
 </style>

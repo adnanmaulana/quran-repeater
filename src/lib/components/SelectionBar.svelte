@@ -62,7 +62,6 @@
 	}
 	@media (min-width: 768px) {
 		.bar {
-			left: var(--rail-w);
 			padding-left: max(var(--gutter), calc((100% - var(--column)) / 2 + var(--gutter)));
 			padding-right: max(var(--gutter), calc((100% - var(--column)) / 2 + var(--gutter)));
 			padding-bottom: 16px;
