@@ -5,12 +5,15 @@
 	import '#lib/design/global.css';
 	import favicon from '#lib/assets/favicon.svg';
 	import { i18n } from '#lib/i18n.svelte.js';
+	import { restoreSession } from '#lib/player/player.svelte.js';
 	import { applyDocumentSettings, settings } from '#lib/stores/settings.svelte.js';
+	import { onMount } from 'svelte';
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
 
 	$effect(() => applyDocumentSettings(settings.value));
+	onMount(restoreSession);
 </script>
 
 <svelte:head>
