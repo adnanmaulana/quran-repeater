@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { flip } from 'svelte/animate';
+	import { dragHandle, dragHandleZone, type DndEvent } from 'svelte-dnd-action';
 	import Stepper from '#lib/components/Stepper.svelte';
 	import Icon from '#lib/design/Icon.svelte';
 	import { detail, title } from '#lib/format.js';
@@ -8,13 +10,34 @@
 	import { editDraft } from '#lib/stores/draft.svelte.js';
 
 	let { items, addHref }: { items: Item[]; addHref: string } = $props();
+
+	const FLIP_MS = 150;
+
+	// The drag library reorders a local copy while dragging; the draft is updated on drop.
+	let list = $state.raw<Item[]>([]);
+	$effect.pre(() => {
+		list = items;
+	});
+
+	const consider = (e: CustomEvent<DndEvent<Item>>) => (list = e.detail.items);
+	const finalize = (e: CustomEvent<DndEvent<Item>>) => {
+		list = e.detail.items;
+		editDraft.setItems(e.detail.items);
+	};
 </script>
 
 <div class="list">
-	<ol>
-		{#each items as item, i (item.id)}
+	<ol
+		use:dragHandleZone={{ items: list, flipDurationMs: FLIP_MS, dropTargetStyle: {}, type: 'playlist' }}
+		onconsider={consider}
+		onfinalize={finalize}
+	>
+		{#each list as item, i (item.id)}
 			{@const name = title(item)}
-			<li>
+			<li animate:flip={{ duration: FLIP_MS }}>
+				<span class="grip" use:dragHandle aria-label={m.reorder_item({ name })}>
+					<Icon name="grip" size={18} />
+				</span>
 				<span class="text">
 					<span class="name">{i + 1}. {name}</span>
 					<span class="detail">{detail(item)}</span>
@@ -57,9 +80,24 @@
 		align-items: center;
 		gap: 6px;
 		min-height: 68px;
-		padding: 0 6px 0 14px;
+		padding: 0 6px 0 2px;
 		border-bottom: 1px solid var(--line-soft);
 		background: var(--surface);
+	}
+	.grip {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		width: 36px;
+		height: var(--tap);
+		border-radius: var(--r-sm);
+		color: var(--border-strong);
+		cursor: grab;
+		touch-action: none; /* let the drag library own touch moves on the handle */
+	}
+	.grip:focus-visible {
+		color: var(--accent);
 	}
 	.text {
 		display: flex;
