@@ -13,11 +13,16 @@
 	import { playsPerListLoop, totalPlays } from '#lib/repeat/queue.js';
 	import { itemAyat } from '#lib/repeat/types.js';
 	import { actions as playerActions } from '#lib/player/player.svelte.js';
-	import { draft, draftConfig, editDraft } from '#lib/stores/draft.svelte.js';
+	import { page } from '$app/state';
+	import { onMount } from 'svelte';
+	import { playlistTitle } from '#lib/format.js';
+	import { playlistActions } from '#lib/playlists/playlists.svelte.js';
+	import { draft, draftConfig, draftPlaylist, editDraft } from '#lib/stores/draft.svelte.js';
 	import { settings } from '#lib/stores/settings.svelte.js';
 	import { downloadActions, downloads } from '#lib/offline/downloads.svelte.js';
 	import DownloadSheet from './DownloadSheet.svelte';
 	import ItemList from './ItemList.svelte';
+	import SaveDialog from './SaveDialog.svelte';
 
 	const d = $derived(draft.value);
 	const s = $derived(settings.value);
@@ -38,9 +43,31 @@
 
 	function start() {
 		// Called from the tap itself, so the browser allows audio to start.
-		playerActions.start(draftConfig());
+		playerActions.start(draftConfig(), draftPlaylist.value);
 		goto(resolve('/player'));
 	}
+
+	let saveOpen = $state(false);
+	let savedFlash = $state(false);
+	const editing = $derived(draftPlaylist.value ? playlistActions.get(draftPlaylist.value) : null);
+
+	function save(name: string) {
+		const id = playlistActions.save(name, $state.snapshot(draft.value), editing?.id ?? null);
+		draftPlaylist.set(id);
+		savedFlash = true;
+		setTimeout(() => (savedFlash = false), 2000);
+	}
+
+	/** "Save changes" saves straight over the playlist; a new one asks for a name first. */
+	function onSaveClick() {
+		if (editing) save(editing.name);
+		else saveOpen = true;
+	}
+
+	// Arriving from a playlist's Download chip opens the download sheet.
+	onMount(() => {
+		if (page.url.searchParams.has('download') && draft.value.items.length) openDownload();
+	});
 	const addHref = resolve('/(tabs)?add=1');
 
 	let sheetOpen = $state(false);
@@ -150,6 +177,11 @@
 			</select>
 		</label>
 
+		<button type="button" class="save" onclick={onSaveClick} aria-live="polite">
+			<Icon name={savedFlash ? 'check' : 'bookmark'} size={18} />
+			{savedFlash ? m.saved() : editing ? m.save_changes() : m.save_playlist()}
+		</button>
+
 		<div class="bar">
 			<p aria-live="polite">
 				{#if offlineReady}<span class="ready"><Icon name="check" size={14} stroke={2.6} />{m.offline_ready()}</span>{' · '}{/if}{summary}
@@ -171,6 +203,10 @@
 		</div>
 	{/if}
 </main>
+
+{#if saveOpen}
+	<SaveDialog initial={playlistTitle(d.items)} onsave={save} onclose={() => (saveOpen = false)} />
+{/if}
 
 {#if sheetOpen}
 	<DownloadSheet items={d.items} reciterId={s.reciterId} onclose={() => (sheetOpen = false)} onstart={start} />
@@ -275,6 +311,20 @@
 		color: var(--accent);
 		font-size: 14px;
 		font-weight: 700;
+	}
+	.save {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		width: calc(100% - 2 * var(--gutter));
+		height: 48px;
+		margin: 12px var(--gutter) 0;
+		border: 1px solid var(--line);
+		border-radius: var(--r-md);
+		background: var(--surface);
+		font-size: 14px;
+		font-weight: 600;
 	}
 	.bar {
 		position: fixed;

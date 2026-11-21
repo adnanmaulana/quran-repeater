@@ -159,5 +159,20 @@
 	"loop_forever_short": "diputar terus",
 	"title_more": "{title} + {count} lainnya",
 	"continue": "Lanjutkan",
-	"progress_loops": "{n} putaran"
+	"progress_loops": "{n} putaran",
+	"save_playlist": "Simpan sebagai daftar putar",
+	"save_changes": "Simpan perubahan",
+	"playlist_name": "Nama daftar putar",
+	"save": "Simpan",
+	"saved": "Tersimpan",
+	"new_playlist": "Baru",
+	"playlists_empty": "Belum ada daftar putar",
+	"playlists_empty_hint": "Atur pengulangan lalu ketuk “Simpan sebagai daftar putar” agar bisa diputar lagi dengan sekali ketuk.",
+	"play_playlist": "Putar {name}",
+	"edit_playlist": "Ubah {name}",
+	"delete_playlist": "Hapus {name}",
+	"delete_playlist_confirm": "Hapus “{name}”? Riwayat dan unduhan tetap tersimpan.",
+	"download_size": "Unduh · ≈ {size}",
+	"played_when": "Diputar {when}",
+	"not_played": "Belum pernah diputar"
 }

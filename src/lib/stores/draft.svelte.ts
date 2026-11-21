@@ -14,9 +14,20 @@ export const draft = persisted<Draft>('draft', ops.EMPTY_DRAFT, {
 	migrate: (old) => ({ ...ops.EMPTY_DRAFT, items: (old as { items?: Item[] })?.items ?? [] })
 });
 
+/** The saved playlist the draft was opened from (Setup then offers "Save changes"), or null. */
+export const draftPlaylist = persisted<string | null>('draft-playlist', null);
+
 /** Replace the items (Home's normal flow) and keep the user's last repeat counts. */
 export function startDraft(items: Item[]) {
 	draft.update((d) => ({ ...d, items }));
+	draftPlaylist.set(null);
+}
+
+/** Open a saved playlist for editing or downloading. */
+export function loadDraft(d: Draft, playlistId: string) {
+	// $state.snapshot, not structuredClone: d may be a reactive proxy, which structuredClone rejects.
+	draft.set($state.snapshot(d) as Draft);
+	draftPlaylist.set(playlistId);
 }
 
 /** Add to the current playlist (Home opened from Setup's "Add surah or range"). */
