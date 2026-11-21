@@ -21,7 +21,9 @@ export default defineConfig({
 		launchOptions: { args: ['--autoplay-policy=no-user-gesture-required'] }
 	},
 	webServer: {
+		// No analytics from test runs.
 		command: `npm run build && npx vite preview --port ${port} --strictPort`,
+		env: { VITE_ANALYTICS_URL: 'off' },
 		port,
 		reuseExistingServer: !process.env.CI,
 		timeout: 120_000
