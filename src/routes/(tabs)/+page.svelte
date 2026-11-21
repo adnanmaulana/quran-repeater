@@ -8,6 +8,7 @@
 	import SegmentedTabs from '#lib/components/SegmentedTabs.svelte';
 	import SelectionBar from '#lib/components/SelectionBar.svelte';
 	import SurahRow from '#lib/components/SurahRow.svelte';
+	import InstallBanner from '#lib/components/InstallBanner.svelte';
 	import ContinueCard from './ContinueCard.svelte';
 	import CustomRanges from './CustomRanges.svelte';
 	import { JUZ, countAyat, searchSurahs, surah, type Surah } from '#lib/data/quran.js';
@@ -104,6 +105,8 @@
 </script>
 
 <svelte:head><title>{m.app_name()}</title></svelte:head>
+
+{#if !adding}<InstallBanner />{/if}
 
 <ScreenHeader eyebrow={adding ? m.adding_to_playlist() : m.tagline()} title={m.app_name()}>
 	{#snippet actions()}
