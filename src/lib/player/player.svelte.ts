@@ -1,6 +1,7 @@
 import { surah } from '#lib/data/quran.js';
 import { audioUrl, reciter } from '#lib/data/reciters.js';
 import { title } from '#lib/format.js';
+import { historyActions, newHistoryId } from '#lib/history/history.svelte.js';
 import { START, type Position } from '#lib/repeat/queue.js';
 import type { RepeatConfig } from '#lib/repeat/types.js';
 import { persisted } from '#lib/stores/persisted.svelte.js';
@@ -18,8 +19,20 @@ export const player = $state<{ snap: Snapshot; sleepMin: number }>({ snap: EMPTY
 const SLEEP_STEPS = [0, 15, 30, 60];
 let sleepTimer: ReturnType<typeof setTimeout> | undefined;
 
+type Session = { config: RepeatConfig; pos: Position; historyId: string; playlistId: string | null; startedAt: number };
+
 /** The current repeat and where it is, so a reload (or reopening the app) resumes there. */
-const session = persisted<{ config: RepeatConfig; pos: Position } | null>('session', null);
+const session = persisted<Session | null>('session', null, {
+	version: 2,
+	// v1 had no history link: give the restored session a fresh history entry.
+	migrate: (old) => {
+		const o = old as { config?: RepeatConfig; pos?: Position } | null;
+		return o?.config && o.pos ? { config: o.config, pos: o.pos, historyId: newHistoryId(), playlistId: null, startedAt: Date.now() } : null;
+	}
+});
+
+/** Which history entry (and playlist) the engine's current config belongs to. */
+let current: { historyId: string; playlistId: string | null; startedAt: number } | null = null;
 
 let engine: AudioEngine | null = null;
 let audio: HTMLAudioElement | null = null;
@@ -32,9 +45,21 @@ function ensure(): AudioEngine {
 	let lastSaved = -1;
 	e.subscribe((s) => {
 		player.snap = s;
-		if (s.config && s.pos && (s.index !== lastSaved || s.state === 'ended')) {
+		if (s.config && s.pos && current && (s.index !== lastSaved || s.state === 'ended')) {
 			lastSaved = s.index;
-			session.set({ config: s.config, pos: s.state === 'ended' ? START : s.pos });
+			const ended = s.state === 'ended';
+			session.set({ config: s.config, pos: ended ? START : s.pos, ...current });
+			historyActions.record({
+				id: current.historyId,
+				config: s.config,
+				pos: s.pos,
+				index: s.index,
+				total: s.total,
+				finished: ended,
+				startedAt: current.startedAt,
+				updatedAt: Date.now(),
+				playlistId: current.playlistId
+			});
 		}
 		updateMediaSession(describe(s), s.state === 'playing' || s.state === 'loading');
 	});
@@ -58,8 +83,17 @@ function describe(s: Snapshot) {
 }
 
 export const actions = {
-	start(config: RepeatConfig) {
+	/** Start a new session (a new history entry). */
+	start(config: RepeatConfig, playlistId: string | null = null) {
+		current = { historyId: newHistoryId(), playlistId, startedAt: Date.now() };
 		ensure().start(config);
+	},
+	/** Continue a history entry where it stopped (from the start if it had finished). */
+	resume(id: string) {
+		const e = historyActions.get(id);
+		if (!e) return;
+		current = { historyId: e.id, playlistId: e.playlistId, startedAt: e.startedAt };
+		ensure().start(e.config, e.finished ? START : e.pos);
 	},
 	toggle: () => ensure().toggle(),
 	next: () => ensure().next(),
@@ -74,6 +108,7 @@ export const actions = {
 	stop() {
 		engine?.stop();
 		session.set(null);
+		current = null;
 		actions.setSleep(0);
 	},
 	/** Off → 15 → 30 → 60 min → off. Pauses playback when it runs out. */
@@ -98,6 +133,7 @@ export function restoreSession() {
 	const saved = session.value;
 	if (!saved || engine) return;
 	try {
+		current = { historyId: saved.historyId, playlistId: saved.playlistId, startedAt: saved.startedAt };
 		ensure().start(saved.config, saved.pos, false);
 	} catch {
 		session.set(null); // e.g. a config from an older, incompatible version
