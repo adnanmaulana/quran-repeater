@@ -15,6 +15,8 @@
 	import { actions as playerActions } from '#lib/player/player.svelte.js';
 	import { draft, draftConfig, editDraft } from '#lib/stores/draft.svelte.js';
 	import { settings } from '#lib/stores/settings.svelte.js';
+	import { downloadActions, downloads } from '#lib/offline/downloads.svelte.js';
+	import DownloadSheet from './DownloadSheet.svelte';
 	import ItemList from './ItemList.svelte';
 
 	const d = $derived(draft.value);
@@ -40,6 +42,35 @@
 		goto(resolve('/player'));
 	}
 	const addHref = resolve('/(tabs)?add=1');
+
+	let sheetOpen = $state(false);
+	/** null = not checked yet; true when every file of this playlist is saved for this reciter. */
+	let offlineReady = $state<boolean | null>(null);
+
+	// Re-check what is saved when the playlist, the reciter or a download changes.
+	$effect(() => {
+		const items = d.items;
+		const reciterId = s.reciterId;
+		void downloads.job?.state;
+		let stale = false;
+		if (!items.length) return;
+		downloadActions
+			.status($state.snapshot(items), reciterId)
+			.then((st) => !stale && (offlineReady = st.total > 0 && st.saved === st.total))
+			.catch(() => !stale && (offlineReady = false));
+		return () => (stale = true);
+	});
+
+	const dlPct = $derived(
+		downloads.job && downloads.job.state !== 'complete' ? Math.floor((downloads.job.done / downloads.job.total) * 100) : null
+	);
+
+	function openDownload() {
+		sheetOpen = true;
+		const job = downloads.job;
+		// Keep a running or paused job; otherwise download this playlist (already saved files are skipped).
+		if (!job || job.state === 'complete' || job.reciterId !== s.reciterId) downloadActions.start($state.snapshot(d.items), s.reciterId);
+	}
 </script>
 
 <svelte:head><title>{m.setup_title()} · {m.app_name()}</title></svelte:head>
@@ -120,13 +151,30 @@
 		</label>
 
 		<div class="bar">
-			<p aria-live="polite">{summary}</p>
-			<button type="button" class="primary" onclick={start}>
-				<Icon name="play" size={18} />{m.start_repeating()}
-			</button>
+			<p aria-live="polite">
+				{#if offlineReady}<span class="ready"><Icon name="check" size={14} stroke={2.6} />{m.offline_ready()}</span>{' · '}{/if}{summary}
+			</p>
+			<div class="buttons">
+				<button
+					type="button"
+					class="download"
+					class:done={offlineReady}
+					aria-label={dlPct !== null ? m.dl_button_progress({ pct: dlPct }) : m.dl_button()}
+					onclick={openDownload}
+				>
+					{#if dlPct !== null}<span class="pct">{dlPct}%</span>{:else}<Icon name={offlineReady ? 'check' : 'download'} size={20} />{/if}
+				</button>
+				<button type="button" class="primary" onclick={start}>
+					<Icon name="play" size={18} />{m.start_repeating()}
+				</button>
+			</div>
 		</div>
 	{/if}
 </main>
+
+{#if sheetOpen}
+	<DownloadSheet items={d.items} reciterId={s.reciterId} onclose={() => (sheetOpen = false)} onstart={start} />
+{/if}
 
 <style>
 	main {
@@ -244,6 +292,42 @@
 		font-size: 13px;
 		color: var(--muted);
 		text-align: center;
+	}
+	.ready {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		color: var(--accent);
+		font-weight: 600;
+		vertical-align: bottom;
+	}
+	.buttons {
+		display: flex;
+		gap: 10px;
+		width: 100%;
+		max-width: 520px;
+		margin: 0 auto;
+	}
+	.download {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		width: 52px;
+		height: 52px;
+		border: 1px solid var(--line);
+		border-radius: var(--r-md);
+		background: var(--surface);
+		color: var(--ink);
+	}
+	.download.done {
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+	.pct {
+		font-size: 12px;
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
 	}
 	.primary {
 		display: flex;
