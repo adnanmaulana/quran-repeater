@@ -145,13 +145,20 @@
 		background: var(--surface);
 		color: var(--ink);
 	}
+	dialog[open] {
+		animation: sheet-in var(--spring-gentle-ms, 0.3s) var(--spring-gentle, ease-out);
+	}
 	dialog::backdrop {
 		background: var(--scrim);
+		animation: backdrop-in 0.2s ease-out;
 	}
 	@media (min-width: 768px) {
 		dialog {
 			margin: auto;
 			border-radius: 28px;
+		}
+		dialog[open] {
+			animation-name: dialog-in;
 		}
 		.handle {
 			visibility: hidden;

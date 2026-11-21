@@ -188,7 +188,7 @@
 	}
 	.line {
 		min-height: 2.2em;
-		animation: line-in 0.3s ease;
+		animation: line-in var(--spring-gentle-ms, 0.3s) var(--spring-gentle, ease);
 	}
 	@keyframes line-in {
 		from {
