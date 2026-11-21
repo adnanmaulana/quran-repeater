@@ -8,6 +8,25 @@ test('lists surahs and searches them', async ({ page }) => {
 	await expect(page.locator('a.row')).toContainText('Al-Mulk');
 });
 
+test('the surah list loads 20 at a time as you scroll; search covers all 114', async ({ page }) => {
+	await page.goto('/');
+	const rows = page.locator('a.row');
+	await expect(rows.first()).toBeVisible();
+	const first = await rows.count();
+	expect(first).toBeLessThanOrEqual(40); // a page or two, enough to fill the screen
+	await rows.last().scrollIntoViewIfNeeded();
+	await expect.poll(() => rows.count()).toBeGreaterThan(first);
+	for (let i = 0; i < 6; i++) await page.mouse.wheel(0, 4000);
+	await expect(rows).toHaveCount(114);
+	await expect(rows.last()).toContainText('An-Nas');
+
+	await page.getByPlaceholder('Name or number').fill('nas');
+	await page.getByPlaceholder('Name or number').fill('');
+	await expect.poll(() => rows.count()).toBeLessThanOrEqual(40); // a new search starts from the first page
+	await page.getByPlaceholder('Name or number').fill('114');
+	await expect(rows).toHaveCount(1);
+});
+
 test('multi-select builds a playlist in tap order', async ({ page }) => {
 	await page.goto('/');
 	await page.getByRole('button', { name: 'Select' }).click();
