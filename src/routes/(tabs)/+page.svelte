@@ -29,6 +29,26 @@
 	const adding = $derived(page.url.searchParams.has('add'));
 	const lang = $derived(i18n.locale === 'id' ? 'id' : 'en');
 	const surahs = $derived(searchSurahs(query, lang));
+
+	/** The surah list renders a page at a time; the next page loads as its end scrolls into view. */
+	const PAGE = 20;
+	let limit = $state(PAGE);
+	const shown = $derived(surahs.slice(0, limit));
+	$effect(() => {
+		void query; // a new search starts from the first page again
+		limit = PAGE;
+	});
+
+	function loadMore(node: HTMLElement) {
+		const io = new IntersectionObserver(
+			(entries) => {
+				if (entries.some((e) => e.isIntersecting)) limit += PAGE;
+			},
+			{ rootMargin: '600px 0px' }
+		);
+		io.observe(node);
+		return { destroy: () => io.disconnect() };
+	}
 	const setupHref = resolve('/setup');
 
 	$effect(() => {
@@ -125,7 +145,7 @@
 
 {#if mode === 'surah'}
 	<div class="list">
-		{#each surahs as s (s.n)}
+		{#each shown as s (s.n)}
 			{@const meta = `${place(s)} · ${count.ayat(s.ayat)}`}
 			{#if selecting}
 				<SurahRow mode="check" badge={s.n} title={s.name} {meta} ar={s.ar} checked={picked.includes(s.n)} ontoggle={() => toggle(s.n)} />
@@ -135,6 +155,10 @@
 		{:else}
 			<p class="empty">{m.no_results({ query })}</p>
 		{/each}
+		{#if shown.length < surahs.length}
+			<!-- Key on the length so the observer re-arms (and fires again if still in view) after each page. -->
+			{#key shown.length}<div class="more" use:loadMore aria-hidden="true"></div>{/key}
+		{/if}
 	</div>
 {:else if mode === 'juz'}
 	<div class="grid">
@@ -253,6 +277,9 @@
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 10px;
 		margin: 14px var(--gutter) 0;
+	}
+	.more {
+		height: 1px;
 	}
 	.juz {
 		display: flex;
