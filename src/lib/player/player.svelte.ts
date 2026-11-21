@@ -13,8 +13,11 @@ import { silenceUrl } from './silence.js';
 
 const EMPTY: Snapshot = { state: 'idle', phase: 'ayah', config: null, pos: null, ref: null, index: 0, total: null };
 
-/** Reactive view of the engine for components. */
-export const player = $state<{ snap: Snapshot }>({ snap: EMPTY });
+/** Reactive view of the engine for components. `sleepMin`: active sleep timer length, 0 = off. */
+export const player = $state<{ snap: Snapshot; sleepMin: number }>({ snap: EMPTY, sleepMin: 0 });
+
+const SLEEP_STEPS = [0, 15, 30, 60];
+let sleepTimer: ReturnType<typeof setTimeout> | undefined;
 
 /** The current repeat and where it is, so a reload (or reopening the app) resumes there. */
 const session = persisted<{ config: RepeatConfig; pos: Position } | null>('session', null);
@@ -72,6 +75,21 @@ export const actions = {
 	stop() {
 		engine?.stop();
 		session.set(null);
+		actions.setSleep(0);
+	},
+	/** Off → 15 → 30 → 60 min → off. Pauses playback when it runs out. */
+	cycleSleep() {
+		const i = SLEEP_STEPS.indexOf(player.sleepMin);
+		actions.setSleep(SLEEP_STEPS[(i + 1) % SLEEP_STEPS.length]);
+	},
+	setSleep(min: number) {
+		clearTimeout(sleepTimer);
+		player.sleepMin = min;
+		if (min > 0)
+			sleepTimer = setTimeout(() => {
+				engine?.pause();
+				player.sleepMin = 0;
+			}, min * 60_000);
 	},
 	time: () => engine?.time() ?? { current: 0, duration: 0 }
 };
