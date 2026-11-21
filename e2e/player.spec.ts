@@ -1,5 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
-import { fakeServices } from './fakes';
+import { fakeServices, routeServiceWorkerRequests } from './fakes';
+
+routeServiceWorkerRequests(true);
 
 async function startIkhlas(page: Page, { perAyah = 1 } = {}) {
 	await page.goto('/');
