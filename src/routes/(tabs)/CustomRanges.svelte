@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '#lib/design/Icon.svelte';
+	import AyahPicker from '#lib/components/AyahPicker.svelte';
 	import SurahPicker from '#lib/components/SurahPicker.svelte';
 	import { countAyat, surah, surahsIn } from '#lib/data/quran.js';
 	import { m } from '#lib/paraglide/messages.js';
@@ -13,8 +14,6 @@
 
 	let ranges = $state<Range[]>([blank()]);
 
-	/** Ayah numbers `from`…`to`, for a dropdown. */
-	const ayatList = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
 	/** The end can't come before the start: in the same surah, it begins at the starting ayah. */
 	const firstToAyah = (r: Range) => (r.toS === r.fromS ? r.fromA : 1);
 
@@ -56,19 +55,9 @@
 			{/if}
 			<div class="fields">
 				<SurahPicker label={m.from_surah()} bind:value={r.fromS} onchange={() => normalize(r)} />
-				<label>
-					{m.from_ayah()}
-					<select bind:value={r.fromA} onchange={() => normalize(r)}>
-						{#each ayatList(1, surah(r.fromS).ayat) as a (a)}<option value={a}>{a}</option>{/each}
-					</select>
-				</label>
+				<AyahPicker label={m.from_ayah()} max={surah(r.fromS).ayat} bind:value={r.fromA} onchange={() => normalize(r)} />
 				<SurahPicker label={m.to_surah()} min={r.fromS} bind:value={r.toS} onchange={() => normalize(r)} />
-				<label>
-					{m.to_ayah()}
-					<select bind:value={r.toA} onchange={() => normalize(r)}>
-						{#each ayatList(firstToAyah(r), surah(r.toS).ayat) as a (a)}<option value={a}>{a}</option>{/each}
-					</select>
-				</label>
+				<AyahPicker label={m.to_ayah()} min={firstToAyah(r)} max={surah(r.toS).ayat} bind:value={r.toA} onchange={() => normalize(r)} />
 			</div>
 			<p class="summary" class:bad={!valid(r)} aria-live="polite">{summary(r)}</p>
 		</fieldset>
@@ -118,27 +107,6 @@
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 12px;
-	}
-	label {
-		display: flex;
-		flex-direction: column;
-		gap: 6px;
-		min-width: 0;
-		font-size: 13px;
-		font-weight: 600;
-		color: var(--muted);
-	}
-
-	select {
-		width: 100%;
-		height: 48px;
-		padding: 0 12px;
-		border: 1px solid var(--line);
-		border-radius: 12px;
-		background: var(--surface-2);
-		font-size: 16px;
-		font-weight: 600;
-		color: var(--ink);
 	}
 	.summary {
 		margin: 0;
