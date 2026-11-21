@@ -75,3 +75,13 @@ export function formatBytes(n: number): string {
 	const mb = n / (1024 * 1024);
 	return mb < 1024 ? `${mb < 10 ? mb.toFixed(1) : Math.round(mb)} MB` : `${(mb / 1024).toFixed(1)} GB`;
 }
+
+/** EveryAyah folders that have at least one downloaded file. */
+export async function downloadedFolders(): Promise<Set<string>> {
+	try {
+		const reqs = await (await caches.open(AUDIO_CACHE)).keys();
+		return new Set(reqs.map((r) => new URL(r.url).pathname.split('/')[2]).filter(Boolean));
+	} catch {
+		return new Set();
+	}
+}
