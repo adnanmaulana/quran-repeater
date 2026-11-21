@@ -56,6 +56,19 @@ export async function fakeServices(page: Page, clipMs = 300): Promise<string[]> 
 		}));
 		return route.fulfill({ json: { code: 200, data }, headers: { 'access-control-allow-origin': '*' } });
 	});
+	// Word timings: the fake text has two words per ayah, each half the clip.
+	await page.context().route('https://api.quran.com/api/v4/recitations/**', (route) => {
+		const s = Number(route.request().url().match(/by_chapter\/(\d+)/)![1]);
+		const half = Math.round(clipMs / 2);
+		const audio_files = Array.from({ length: surahs[s - 1].ayat }, (_, i) => ({
+			verse_key: `${s}:${i + 1}`,
+			segments: [
+				[0, 1, 0, half],
+				[1, 2, half, clipMs]
+			]
+		}));
+		return route.fulfill({ json: { audio_files }, headers: { 'access-control-allow-origin': '*' } });
+	});
 	return requested;
 }
 
