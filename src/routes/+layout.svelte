@@ -22,7 +22,8 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<meta name="theme-color" content="#0A6B57" />
+	<meta name="theme-color" content="#0A6B57" media="(prefers-color-scheme: light)" />
+	<meta name="theme-color" content="#0B1512" media="(prefers-color-scheme: dark)" />
 	<title>Quran Repeater</title>
 </svelte:head>
 

@@ -321,7 +321,7 @@
 	}
 	.error .note {
 		background: var(--danger-soft);
-		color: #8c1d18;
+		color: var(--danger);
 	}
 	.storage {
 		margin: 12px 0 0;
