@@ -17,7 +17,8 @@
 		"gen:meta": "node scripts/generate-metadata.mjs",
 		"test": "vitest run",
 		"test:e2e": "playwright test",
-		"i18n:types": "paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide"
+		"i18n:types": "paraglide-js compile --project ./project.inlang --outdir ./src/lib/paraglide",
+		"gen:icons": "node scripts/generate-icons.mjs"
 	},
 	"devDependencies": {
 		"@inlang/paraglide-js": "^3.2.2",
