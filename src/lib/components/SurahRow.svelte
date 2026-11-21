@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '#lib/design/Icon.svelte';
+	import { zoomIn, zoomOut } from '#lib/motion/transitions.js';
 
 	type Props = {
 		badge: string | number;
@@ -23,7 +24,7 @@
 {:else}
 	<button class="row" class:on={props.checked} type="button" role="checkbox" aria-checked={props.checked} onclick={props.ontoggle}>
 		<span class="box" aria-hidden="true">
-			{#if props.checked}<Icon name="check" size={16} stroke={3} />{/if}
+			{#if props.checked}<span class="mark" in:zoomIn out:zoomOut={{ duration: 100, to: 0.5 }}><Icon name="check" size={16} stroke={3} /></span>{/if}
 		</span>
 		<span class="text">
 			<span class="title">{props.badge} · {props.title}</span>
@@ -63,6 +64,9 @@
 			background: var(--surface-2);
 		}
 	}
+	.row:active {
+		transform: none;
+	}
 	.row.on {
 		background: var(--accent-tint);
 	}
@@ -91,6 +95,9 @@
 		border: 2px solid var(--border-strong);
 		background: var(--surface);
 		color: var(--on-accent);
+	}
+	.mark {
+		display: flex;
 	}
 	.on .box {
 		border-color: var(--accent);

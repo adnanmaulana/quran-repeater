@@ -16,7 +16,9 @@
 		border: 0;
 		border-radius: 16px;
 		background: var(--border-strong);
-		transition: background 0.15s;
+		transition:
+			background 0.15s,
+			transform var(--spring-snappy-ms, 0.2s) var(--spring-snappy, ease-out);
 	}
 	.knob {
 		width: 26px;
@@ -24,7 +26,8 @@
 		border-radius: 50%;
 		background: #fff;
 		box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
-		transition: transform 0.15s;
+		/* Bouncy, so the knob lands with a little settle like a physical toggle. */
+		transition: transform var(--spring-bouncy-ms, 0.2s) var(--spring-bouncy, ease-out);
 	}
 	button.on {
 		background: var(--accent);
