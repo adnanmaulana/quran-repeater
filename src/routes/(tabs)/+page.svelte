@@ -108,7 +108,7 @@
 <ScreenHeader eyebrow={adding ? m.adding_to_playlist() : m.tagline()} title={m.app_name()}>
 	{#snippet actions()}
 		<a class="pill" href={resolve('/(tabs)/playlists')}>
-			<Icon name="playlist" size={18} />{m.nav_playlists()}
+			<Icon name="playlist" size={20} /><span class="sr-only">{m.nav_playlists()}</span>
 		</a>
 	{/snippet}
 </ScreenHeader>
@@ -203,15 +203,14 @@
 	.pill {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		justify-content: center;
+		width: var(--tap);
 		height: var(--tap);
-		padding: 0 14px;
 		border: 1px solid var(--line);
-		border-radius: 22px;
+		border-radius: 50%;
 		background: var(--surface);
 		color: var(--ink);
-		font-size: 14px;
-		font-weight: 600;
+		box-shadow: var(--shadow-card);
 	}
 	.tabs {
 		margin: 20px var(--gutter) 0;
@@ -262,7 +261,8 @@
 		flex-direction: column;
 		margin: 12px var(--gutter) 0;
 		overflow: hidden;
-		border: 1px solid var(--line);
+		border: 1px solid transparent;
+		box-shadow: var(--shadow-card);
 		border-radius: var(--r-lg);
 		background: var(--surface);
 	}
@@ -286,7 +286,8 @@
 		flex-direction: column;
 		gap: 6px;
 		padding: 14px;
-		border: 1px solid var(--line);
+		border: 1px solid transparent;
+		box-shadow: var(--shadow-card);
 		border-radius: 16px;
 		background: var(--surface);
 		color: var(--ink);

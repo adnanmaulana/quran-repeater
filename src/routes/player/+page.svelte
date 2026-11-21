@@ -117,7 +117,7 @@
 
 <style>
 	:global(body:has(.player)) {
-		background: var(--night);
+		background: var(--night-glow) no-repeat, var(--night);
 	}
 	.player {
 		display: flex;
@@ -126,7 +126,6 @@
 		max-width: 560px;
 		margin: 0 auto;
 		padding-bottom: env(safe-area-inset-bottom);
-		background: var(--night);
 		color: var(--night-ink);
 	}
 	header {
@@ -274,11 +273,11 @@
 		font-weight: 600;
 	}
 	.notice.error {
-		background: #3a1714;
-		color: #f4c7c3;
+		background: var(--night-danger-soft);
+		color: var(--night-danger);
 	}
 	.notice.error :global(svg) {
-		color: #f4c7c3;
+		color: var(--night-danger);
 	}
 	.empty {
 		display: flex;

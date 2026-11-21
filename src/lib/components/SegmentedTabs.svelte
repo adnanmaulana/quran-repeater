@@ -62,6 +62,6 @@
 		background: var(--surface);
 		color: var(--ink);
 		font-weight: 700;
-		box-shadow: 0 1px 2px rgb(16 32 27 / 0.12);
+		box-shadow: var(--shadow-card);
 	}
 </style>

@@ -41,11 +41,27 @@
 		width: 100%;
 		min-height: 60px;
 		padding: 0 14px;
+		position: relative;
 		border: 0;
-		border-bottom: 1px solid var(--line-soft);
 		background: var(--surface);
 		color: var(--ink);
 		text-align: left;
+		transition: background-color 0.15s;
+	}
+	/* Hairline between rows, starting under the text so the badges read as one column. */
+	.row:not(:last-child)::after {
+		content: '';
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		left: 62px;
+		height: 1px;
+		background: var(--line-soft);
+	}
+	@media (hover: hover) {
+		.row:hover {
+			background: var(--surface-2);
+		}
 	}
 	.row.on {
 		background: var(--accent-tint);
@@ -58,9 +74,10 @@
 		width: 36px;
 		height: 36px;
 		border-radius: var(--r-sm);
-		background: var(--accent-soft);
-		color: var(--accent);
+		background: var(--accent-tint);
+		color: var(--accent-ink);
 		font-size: 13px;
+		font-variant-numeric: tabular-nums;
 		font-weight: 700;
 	}
 	.box {
@@ -98,5 +115,6 @@
 		font-family: var(--font-ar);
 		font-size: 20px;
 		direction: rtl;
+		color: var(--accent-ink);
 	}
 </style>

@@ -66,7 +66,8 @@
 	.list {
 		margin: 14px var(--gutter) 0;
 		overflow: hidden;
-		border: 1px solid var(--line);
+		border: 1px solid transparent;
+		box-shadow: var(--shadow-card);
 		border-radius: var(--r-lg);
 		background: var(--surface);
 	}

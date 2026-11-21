@@ -51,7 +51,7 @@
 			</label>
 		{/each}
 	</div>
-	<p class="hint">{m.follows_device()}</p>
+	<p class="hint">{m.language_hint()}</p>
 </section>
 
 <section>
@@ -143,7 +143,8 @@
 	}
 	.group {
 		overflow: hidden;
-		border: 1px solid var(--line);
+		border: 1px solid transparent;
+		box-shadow: var(--shadow-card);
 		border-radius: var(--r-lg);
 		background: var(--surface);
 	}
@@ -249,7 +250,9 @@
 		font-weight: 600;
 	}
 	.inner {
+		border-color: var(--line);
 		border-radius: var(--r-md);
+		box-shadow: none; /* nested inside a card: an outline, not a second shadow */
 	}
 	.name.small {
 		font-size: 14px;

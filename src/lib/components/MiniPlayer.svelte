@@ -41,7 +41,7 @@
 		border-radius: 16px;
 		background: var(--night);
 		color: var(--night-ink);
-		box-shadow: 0 4px 16px rgb(14 29 25 / 0.25);
+		box-shadow: var(--shadow-float);
 	}
 	a {
 		display: flex;

@@ -146,7 +146,8 @@
 		flex-direction: column;
 		gap: 12px;
 		padding: 16px;
-		border: 1px solid var(--line);
+		border: 1px solid transparent;
+		box-shadow: var(--shadow-card);
 		border-radius: var(--r-xl);
 		background: var(--surface);
 	}

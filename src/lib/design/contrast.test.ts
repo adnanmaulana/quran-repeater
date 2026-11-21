@@ -44,6 +44,8 @@ const pairs: [string, string, number][] = [
 	['accent', 'bg', TEXT], // eyebrow on the page background
 	['on-accent', 'accent', TEXT], // primary buttons, selected chips
 	['accent-ink', 'accent-soft', TEXT], // Resume, Offline ready badge
+	['accent-ink', 'accent-tint', TEXT], // surah number badges
+	['accent-ink', 'surface', TEXT], // Arabic surah names
 	['danger', 'surface', TEXT], // Remove downloads, failed item
 	['danger', 'danger-soft', TEXT], // download error note
 	['border-strong', 'surface', UI], // unchecked checkbox and radio borders
@@ -51,7 +53,9 @@ const pairs: [string, string, number][] = [
 	['night-muted', 'night', TEXT], // translation, reciter name
 	['night-accent', 'night', TEXT], // "Ayah 67:3", Continue label
 	['night', 'night-accent', TEXT], // play button icon, current ayah chip
-	['night-muted', 'night-2', TEXT] // player notice
+	['night-muted', 'night-2', TEXT], // player notice
+	['night-ink', 'night-3', TEXT], // ayah chips at the top of the glow
+	['night-danger', 'night-danger-soft', TEXT] // player error notice
 ];
 
 for (const [name, theme] of [

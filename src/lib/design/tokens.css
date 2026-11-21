@@ -1,31 +1,40 @@
 /* Design tokens — values come straight from the design canvas. */
 :root {
-	--bg: #f3f5f4;
+	/* Light (the default theme): warm off-white page, white cards, emerald accent. */
+	--bg: #f6f7f4;
 	--surface: #ffffff;
-	--surface-2: #f7f9f8;
-	--track: #e4e9e7;
-	--ink: #10201b;
-	--muted: #52615c;
-	--line: #dde3e0;
-	--line-soft: #eef1f0;
-	--border-strong: #84928d;
-	--accent: #0a6b57;
-	--accent-ink: #064c3e;
-	--accent-soft: #e3f0ec;
-	--accent-tint: #eef6f3;
+	--surface-2: #f3f5f1;
+	--track: #eaede8;
+	--ink: #11201b;
+	--muted: #56635e;
+	--line: #e6e9e4;
+	--line-soft: #eff1ed;
+	--border-strong: #8a958f;
+	--accent: #0b7a5e;
+	--accent-ink: #075a45;
+	--accent-soft: #dff2ea;
+	--accent-tint: #eff8f4;
 	/* Text and icons on an accent background. */
 	--on-accent: #ffffff;
 	--danger: #b3261e;
 	--danger-soft: #fcedeb;
+	/* Cards float on a soft shadow instead of a heavy outline. */
+	--shadow-card: 0 1px 2px rgb(17 32 27 / 0.04), 0 4px 14px rgb(17 32 27 / 0.05);
+	--shadow-float: 0 8px 28px rgb(17 32 27 / 0.18);
+	--scrim: rgb(11 22 18 / 0.5);
 
-	/* The night palette is used by the player and the "Continue" card in both themes. */
-	--night: #0e1d19;
-	--night-2: #162925;
-	--night-3: #1d312b;
-	--night-line: #2a3b36;
-	--night-ink: #f3f5f4;
-	--night-muted: #b9c7c2;
-	--night-accent: #8fd9c4;
+	/* The night palette (deep emerald with gold) is used by the player, mini player and the
+	   "Continue" card in both themes. */
+	--night: #0a2621;
+	--night-2: #10352d;
+	--night-3: #154236;
+	--night-line: #245447;
+	--night-ink: #f7f4ec;
+	--night-muted: #bed0c8;
+	--night-accent: #e8c36b;
+	--night-glow: radial-gradient(120% 60% at 50% 0%, #13493b 0%, #0a2621 70%);
+	--night-danger: #f4c7c3;
+	--night-danger-soft: #4a1d18;
 
 	--font-ui: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
 	--font-ar: 'Amiri', 'Noto Naskh Arabic', serif;
@@ -48,44 +57,51 @@
 :root[data-ar-size='S'] { --ar-size: 22px; }
 :root[data-ar-size='L'] { --ar-size: 36px; }
 
-/* Dark theme: Phase 6 will tune these; the structure is in place now. */
+/* Dark theme: near-black neutrals with a mint accent. Applies when chosen, or with System on a
+   dark device. */
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme='light']) {
-		--bg: #0b1512;
-		--surface: #13211d;
-		--surface-2: #182924;
-		--track: #22332e;
-		--ink: #eef2f0;
-		--muted: #a7b6b1;
-		--line: #26372f;
-		--line-soft: #1d2d28;
-		--border-strong: #6b7d77;
-		--accent: #6fcfb4;
-		--accent-ink: #8fd9c4;
-		--accent-soft: #1b3a32;
-		--accent-tint: #17302a;
-		--on-accent: #0b1512;
+		--bg: #0c1110;
+		--surface: #151b19;
+		--surface-2: #1a2120;
+		--track: #232b29;
+		--ink: #edf1ef;
+		--muted: #a3ada9;
+		--line: #242c2a;
+		--line-soft: #1c2321;
+		--border-strong: #6c7773;
+		--accent: #4cc9a0;
+		--accent-ink: #7edcbc;
+		--accent-soft: #143329;
+		--accent-tint: #112821;
+		--on-accent: #05201a;
 		--danger: #f28b82;
 		--danger-soft: #3a1714;
+		--shadow-card: 0 0 0 1px rgb(255 255 255 / 0.02);
+		--shadow-float: 0 8px 28px rgb(0 0 0 / 0.5);
+		--scrim: rgb(0 0 0 / 0.6);
 		color-scheme: dark;
 	}
 }
 :root[data-theme='dark'] {
-	--bg: #0b1512;
-	--surface: #13211d;
-	--surface-2: #182924;
-	--track: #22332e;
-	--ink: #eef2f0;
-	--muted: #a7b6b1;
-	--line: #26372f;
-	--line-soft: #1d2d28;
-	--border-strong: #6b7d77;
-	--accent: #6fcfb4;
-	--accent-ink: #8fd9c4;
-	--accent-soft: #1b3a32;
-	--accent-tint: #17302a;
-	--on-accent: #0b1512;
+	--bg: #0c1110;
+	--surface: #151b19;
+	--surface-2: #1a2120;
+	--track: #232b29;
+	--ink: #edf1ef;
+	--muted: #a3ada9;
+	--line: #242c2a;
+	--line-soft: #1c2321;
+	--border-strong: #6c7773;
+	--accent: #4cc9a0;
+	--accent-ink: #7edcbc;
+	--accent-soft: #143329;
+	--accent-tint: #112821;
+	--on-accent: #05201a;
 	--danger: #f28b82;
 	--danger-soft: #3a1714;
+	--shadow-card: 0 0 0 1px rgb(255 255 255 / 0.02);
+	--shadow-float: 0 8px 28px rgb(0 0 0 / 0.5);
+	--scrim: rgb(0 0 0 / 0.6);
 	color-scheme: dark;
 }
