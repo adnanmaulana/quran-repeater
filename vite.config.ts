@@ -1,7 +1,7 @@
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
 	plugins: [
@@ -25,5 +25,9 @@ export default defineConfig({
 			strategy: ['localStorage', 'preferredLanguage', 'baseLocale'],
 			localStorageKey: 'qr.lang'
 		})
-	]
+	],
+	test: {
+		// Unit tests only; browser tests in e2e/ run with Playwright.
+		include: ['src/**/*.test.ts']
+	}
 });
