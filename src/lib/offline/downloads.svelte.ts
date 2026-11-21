@@ -1,9 +1,10 @@
+import { track } from '#lib/analytics/analytics.js';
 import { audioUrl, reciter } from '#lib/data/reciters.js';
 import { surah } from '#lib/data/quran.js';
 import { loadSurahText } from '#lib/data/text.js';
 import { loadSurahTimings } from '#lib/data/timings.js';
 import { i18n } from '#lib/i18n.svelte.js';
-import type { Item } from '#lib/repeat/types.js';
+import { itemAyat, type Item } from '#lib/repeat/types.js';
 import { settings, translationFor } from '#lib/stores/settings.svelte.js';
 import { AUDIO_CACHE } from './caches.js';
 import { DownloadManager, type Job } from './downloads.js';
@@ -31,19 +32,28 @@ const dm = () =>
 				]);
 			}
 		},
-		(job) => (downloads.job = job)
+		(job) => {
+			// One event per job outcome: complete, or stopped with files that failed.
+			if (job && job.state !== downloads.job?.state && (job.state === 'complete' || job.state === 'error'))
+				track('download_finish', { state: job.state, reciter: job.reciterId, files: job.total, mb: Math.round(job.bytes / 1e5) / 10 });
+			downloads.job = job;
+		}
 	));
 
 export const downloadActions = {
 	async start(items: Item[], reciterId: string) {
 		// Ask the browser not to evict downloads under storage pressure (granted silently on most
 		// installed PWAs; a refusal still allows downloading).
-		await navigator.storage?.persist?.().catch(() => false);
+		const persisted = await navigator.storage?.persist?.().catch(() => false);
+		track('download_start', { items: items.length, ayat: items.reduce((n, i) => n + itemAyat(i), 0), reciter: reciterId, persisted: !!persisted });
 		return dm().start(items, reciterId);
 	},
 	pause: () => dm().pause(),
 	resume: () => dm().resume(),
-	cancel: () => dm().cancel(),
+	cancel: () => {
+		track('download_cancel');
+		dm().cancel();
+	},
 	status: (items: Item[], reciterId: string) => dm().status(items, reciterId),
 	estimateBytes: (count: number, reciterId: string) => count * bytesPerAyah(reciterId)
 };

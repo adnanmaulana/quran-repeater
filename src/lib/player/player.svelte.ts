@@ -1,3 +1,4 @@
+import { configProps, track } from '#lib/analytics/analytics.js';
 import { surah } from '#lib/data/quran.js';
 import { audioUrl, reciter } from '#lib/data/reciters.js';
 import { title } from '#lib/format.js';
@@ -43,8 +44,15 @@ function ensure(): AudioEngine {
 	audio.preload = 'auto';
 	const e = new AudioEngine({ audio, loader: new BlobLoader(), urlFor: audioUrl, silence: silenceUrl });
 	let lastSaved = -1;
+	let lastState = EMPTY.state;
 	e.subscribe((s) => {
 		player.snap = s;
+		if (s.state !== lastState) {
+			if (s.config && s.state === 'ended')
+				track('repeat_finish', { ...configProps(s.config), minutes: current ? Math.round((Date.now() - current.startedAt) / 60_000) : 0 });
+			if (s.config && s.state === 'error') track('playback_error', { reciter: s.config.reciterId });
+			lastState = s.state;
+		}
 		if (s.config && s.pos && current && (s.index !== lastSaved || s.state === 'ended')) {
 			lastSaved = s.index;
 			const ended = s.state === 'ended';
@@ -86,6 +94,7 @@ export const actions = {
 	/** Start a new session (a new history entry). */
 	start(config: RepeatConfig, playlistId: string | null = null) {
 		current = { historyId: newHistoryId(), playlistId, startedAt: Date.now() };
+		track('repeat_start', { from: playlistId ? 'playlist' : 'setup', ...configProps(config) });
 		ensure().start(config);
 	},
 	/** Continue a history entry where it stopped (from the start if it had finished). */
@@ -93,6 +102,7 @@ export const actions = {
 		const e = historyActions.get(id);
 		if (!e) return;
 		current = { historyId: e.id, playlistId: e.playlistId, startedAt: e.startedAt };
+		track('repeat_resume', { finished: e.finished, ...configProps(e.config) });
 		ensure().start(e.config, e.finished ? START : e.pos);
 	},
 	toggle: () => ensure().toggle(),
