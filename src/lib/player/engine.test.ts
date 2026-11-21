@@ -120,10 +120,14 @@ describe('AudioEngine controls', () => {
 		expect(snap().state).toBe('paused');
 		engine.jumpToAyah(4);
 		expect(snap()).toMatchObject({ state: 'paused', ref: { s: 1, a: 5 } });
+		const states: string[] = [];
+		const unsub = engine.subscribe((s) => states.push(s.state));
 		const before = audio.sources.length;
 		engine.toggle();
 		expect(snap().state).toBe('playing');
 		expect(audio.sources.slice(before)).toEqual(['1:5']);
+		expect(states).toEqual(['paused', 'loading', 'playing']); // Pause shows before sound starts
+		unsub();
 	});
 
 	it('restores a session paused without autoplay', () => {

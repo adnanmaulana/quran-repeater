@@ -85,6 +85,7 @@ export class AudioEngine {
 		if (this.state === 'ended') return this.load(START, true);
 		if (this.state === 'error') return this.load(this.pos, true);
 		this.applyRate();
+		this.set('loading'); // show Pause right away; 'playing' follows once sound starts
 		this.attemptPlay();
 	}
 
