@@ -34,6 +34,8 @@
 		position: fixed;
 		inset: auto 0 0 0;
 		z-index: 10;
+		/* Its own view-transition layer: it holds still while the screen above it changes. */
+		view-transition-name: dock;
 	}
 	.dock :global(nav) {
 		position: static;

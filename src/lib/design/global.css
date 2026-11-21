@@ -69,3 +69,50 @@ a {
 		animation: none !important;
 	}
 }
+
+/* Screen changes: a short cross-fade with a slight rise (see onNavigate in the root layout).
+   The bottom dock is its own layer so it holds still while the page underneath changes. */
+::view-transition-old(root) {
+	animation: 120ms ease-in both vt-out;
+}
+::view-transition-new(root) {
+	animation: var(--spring-gentle-ms, 240ms) var(--spring-gentle, ease-out) both vt-in;
+}
+@keyframes vt-out {
+	to {
+		opacity: 0;
+	}
+}
+@keyframes vt-in {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+}
+
+/* Press feedback: buttons dip slightly under a finger and spring back on release. */
+button {
+	transition: transform var(--spring-snappy-ms, 0.2s) var(--spring-snappy, ease-out);
+}
+button:not(:disabled):active {
+	transform: scale(0.97);
+	transition-duration: 60ms;
+}
+
+/* Native dialogs open with a spring: sheets rise from the bottom, centred dialogs zoom in. */
+@keyframes sheet-in {
+	from {
+		transform: translateY(100%);
+	}
+}
+@keyframes dialog-in {
+	from {
+		opacity: 0;
+		transform: scale(0.94);
+	}
+}
+@keyframes backdrop-in {
+	from {
+		opacity: 0;
+	}
+}
