@@ -7,7 +7,9 @@ export default defineConfig({
 	use: {
 		baseURL: 'http://localhost:4173',
 		...devices['Pixel 7'],
-		locale: 'en-US'
+		locale: 'en-US',
+		// Audio starts from taps anyway; this keeps headless runs from blocking restored sessions.
+		launchOptions: { args: ['--autoplay-policy=no-user-gesture-required'] }
 	},
 	webServer: {
 		command: 'npm run build && npx vite preview --port 4173 --strictPort',
