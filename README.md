@@ -10,7 +10,8 @@ English and Bahasa Indonesia.
 npm install
 npm run dev        # http://localhost:5173
 npm run check      # type-check
-npm test           # unit tests
+npm test           # unit tests (Vitest)
+npm run test:e2e   # browser tests (Playwright, builds and serves the app)
 npm run build      # static output in build/
 ```
 
