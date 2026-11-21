@@ -17,7 +17,7 @@
 	"tab_juz": "Juz",
 	"tab_custom": "Ayat pilihan",
 	"search_label": "Cari surah",
-	"search_placeholder": "Cari nama atau nomor surah",
+	"search_placeholder": "Nama atau nomor",
 	"no_results": "Tidak ada surah yang cocok dengan “{query}”",
 	"select": "Pilih",
 	"cancel": "Batal",

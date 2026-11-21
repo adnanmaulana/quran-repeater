@@ -17,7 +17,7 @@
 	"tab_juz": "Juz",
 	"tab_custom": "Custom ayat",
 	"search_label": "Search surah",
-	"search_placeholder": "Search surah name or number",
+	"search_placeholder": "Name or number",
 	"no_results": "No surah matches “{query}”",
 	"select": "Select",
 	"cancel": "Cancel",
