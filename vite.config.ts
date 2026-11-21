@@ -14,7 +14,11 @@ export default defineConfig({
 
 			// Static SPA: every route is rendered on the client, `index.html` is the fallback
 			// so deep links work on any static host and inside the installed PWA.
-			adapter: adapter({ fallback: 'index.html' })
+			adapter: adapter({ fallback: 'index.html' }),
+
+			// Inline small stylesheets into the page: a handful of 1–2 KB CSS files otherwise each
+			// cost a render-blocking round trip on slow networks.
+			inlineStyleThreshold: 8 * 1024
 		}),
 
 		paraglideVitePlugin({
