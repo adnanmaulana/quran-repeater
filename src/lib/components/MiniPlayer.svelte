@@ -4,6 +4,7 @@
 	import { title } from '#lib/format.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { actions, player } from '#lib/player/player.svelte.js';
+	import { repsOf } from '#lib/repeat/queue.js';
 
 	const snap = $derived(player.snap);
 	const busy = $derived(snap.state === 'playing' || snap.state === 'loading');
@@ -19,7 +20,7 @@
 			<span class="sr-only">{m.player_title()}:</span>
 			<span class="name">{name}</span>
 			<span class="meta">
-				{snap.ref.s}:{snap.ref.a} · {m.repeat_of({ n: snap.pos.rep + 1, total: snap.config.perAyah })}
+				{snap.ref.s}:{snap.ref.a} · {m.repeat_of({ n: snap.pos.rep + 1, total: repsOf(snap.config, snap.ref) })}
 			</span>
 		</a>
 		<button type="button" aria-label={busy ? m.pause() : m.play()} onclick={actions.toggle}>

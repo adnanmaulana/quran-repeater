@@ -23,13 +23,20 @@ const fmt = (cfg: QueueConfig, limit?: number) => [...iterate(cfg, limit)].map((
 describe('queue order', () => {
 	it('repeats each ayah, then each item, then the list', () => {
 		const cfg: QueueConfig = { items: [range(1, 1, 1, 2, 2), range(112, 1, 112, 1)], perAyah: 2, listLoops: 2 };
-		const one = ['1:1', '1:1', '1:2', '1:2', '1:1', '1:1', '1:2', '1:2', '112:1b', '112:1'];
+		const one = ['1:1', '1:2', '1:2', '1:1', '1:2', '1:2', '112:1b', '112:1'];
 		expect(fmt(cfg)).toEqual([...one, ...one]);
 	});
 
 	it('walks ranges across surahs and flags the Basmalah once per surah start', () => {
 		const cfg: QueueConfig = { items: [range(113, 5, 114, 2)], perAyah: 1, listLoops: 1 };
 		expect(fmt(cfg)).toEqual(['113:5', '114:1b', '114:2']);
+	});
+
+	it('recites Al-Fatihah 1 (the Basmalah) once each time the surah starts, never repeated', () => {
+		const cfg: QueueConfig = { items: [range(1, 1, 1, 2), range(1, 2, 1, 2)], perAyah: 3, listLoops: 1 };
+		expect(fmt(cfg)).toEqual(['1:1', '1:2', '1:2', '1:2', '1:2', '1:2', '1:2']);
+		expect(totalPlays(cfg)).toBe(7);
+		expect(totalPlays({ items: [itemFromSurah(1)], perAyah: 3, listLoops: 2 })).toBe(2 * (1 + 6 * 3));
 	});
 
 	it('never flags the Basmalah for Al-Fatihah or At-Tawbah', () => {
@@ -93,8 +100,12 @@ describe('navigation', () => {
 	const at = (pos: Position | null) => (pos ? `${pos.listLoop}/${pos.item}/${pos.itemLoop}/${playAt(cfg, pos).ref.s}:${playAt(cfg, pos).ref.a}#${pos.rep}` : 'end');
 
 	it('next walks reps, then ayat', () => {
-		expect(at(next(cfg, START))).toBe('0/0/0/1:1#1');
-		expect(at(next(cfg, { ...START, rep: 1 }))).toBe('0/0/0/1:2#0');
+		expect(at(next(cfg, { ...START, ayah: 1 }))).toBe('0/0/0/1:2#1');
+		expect(at(next(cfg, { ...START, ayah: 1, rep: 1 }))).toBe('0/0/0/1:3#0');
+	});
+
+	it('next does not repeat Al-Fatihah 1', () => {
+		expect(at(next(cfg, START))).toBe('0/0/0/1:2#0');
 	});
 
 	it('nextAyah crosses item loops, items and list loops, then ends', () => {
