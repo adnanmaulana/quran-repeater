@@ -1,5 +1,7 @@
 import { audioUrl, reciter } from '#lib/data/reciters.js';
+import { surah } from '#lib/data/quran.js';
 import { loadSurahText } from '#lib/data/text.js';
+import { loadSurahTimings } from '#lib/data/timings.js';
 import { i18n } from '#lib/i18n.svelte.js';
 import type { Item } from '#lib/repeat/types.js';
 import { settings, translationFor } from '#lib/stores/settings.svelte.js';
@@ -19,9 +21,14 @@ const dm = () =>
 			fetcher: (...a) => fetch(...a),
 			urlFor: audioUrl,
 			bytesPerAyah,
-			saveText: (surahs) => {
+			saveText: (surahs, reciterId) => {
 				const tr = translationFor(i18n.locale, settings.value);
-				return Promise.all(surahs.map((s) => loadSurahText(s, tr)));
+				// The Basmalah clip's timings live with Al-Fatihah.
+				const timed = [...new Set([1, ...surahs])];
+				return Promise.all([
+					...surahs.map((s) => loadSurahText(s, tr)),
+					...timed.map((s) => loadSurahTimings(s, surah(s).ayat, reciterId).catch(() => null))
+				]);
 			}
 		},
 		(job) => (downloads.job = job)
