@@ -1,3 +1,4 @@
+import { track } from '#lib/analytics/analytics.js';
 import type { Draft } from '#lib/repeat/draft.js';
 import { persisted } from '#lib/stores/persisted.svelte.js';
 import * as ops from './playlists.js';
@@ -11,6 +12,7 @@ export const playlistActions = {
 	save(name: string, draft: Draft, id: string | null): string {
 		const r = ops.save(playlists.value, name, draft, id);
 		playlists.set(r.list);
+		track('playlist_save', { items: draft.items.length, edit: id !== null });
 		return r.id;
 	},
 	remove: (id: string) => playlists.update((list) => ops.remove(list, id)),
