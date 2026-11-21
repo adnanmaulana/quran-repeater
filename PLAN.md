@@ -14,7 +14,7 @@ playlists and settings stay on the device.
 | i18n | Paraglide JS (compiled, tree-shaken) — English + Bahasa Indonesia |
 | State | Svelte runes + a small `persisted()` helper for localStorage |
 | Cache | IndexedDB (`idb-keyval`) for surah text and the download index |
-| PWA | `@vite-pwa/sveltekit` (Workbox) |
+| PWA | SvelteKit's built-in service worker (`src/service-worker/`), no Workbox |
 | Tests | Vitest (logic), Playwright (flows) |
 
 ## Data sources (checked 2026-11-21)
@@ -24,7 +24,8 @@ playlists and settings stay on the device.
   strip it for display.
 - **Audio:** EveryAyah — `https://everyayah.com/data/{folder}/{SSS}{AAA}.mp3`. CORS `*` and range
   requests work, so files can be cached for offline playback. (`cdn.islamic.network` sends no CORS
-  header, so it is not used.)
+  header, so it is not used.) Ayah-1 files do not include the Basmalah; the player plays `001001`
+  before ayah 1 of every surah except 1 and 9.
 - **Bundled:** `src/lib/data/surahs.json` and `juz.json`, generated once by
   `scripts/generate-metadata.mjs`, so lists render with no network call.
 
@@ -68,8 +69,15 @@ code is split per route.
 | 5 | History + resume, saved playlists, reciters with preview, settings | Reopening the app resumes at the same ayah and repeat |
 | 6 | Wider layout, dark theme, accessibility, Lighthouse, deploy | Lighthouse ≥ 95, deployed |
 
+## Offline
+
+- The service worker precaches the app shell per version and serves pages network-first with a
+  3 s fallback to the cached app.
+- Downloads go to the `qr-audio-v1` cache; the service worker serves EveryAyah requests from it,
+  answering HTTP Range requests with 206 (iOS Safari needs this for media).
+- Surah text is kept in IndexedDB; a download also saves the text of its surahs.
+
 ## Open checks
 
 - Background playback on a real iPhone (installed PWA) — Phase 3 gate.
-- Whether EveryAyah's ayah-1 files include the Basmalah — check by listening in Phase 3.
 - Indonesian copy needs a native-speaker review.
