@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import fixture from './__fixtures__/surah-67-editions.json';
-import { BASMALAH_TEXT, arabicNumber, parseEditions, stripBasmalah } from './text';
+import { BASMALAH_TEXT, arabicNumber, ayahWords, parseEditions, stripBasmalah } from './text';
 
 describe('stripBasmalah', () => {
 	it('removes the prefixed Basmalah from ayah 1', () => {
@@ -36,4 +36,22 @@ describe('parseEditions', () => {
 
 it('formats Arabic-Indic numbers', () => {
 	expect(arabicNumber(255)).toBe('٢٥٥');
+});
+
+describe('ayahWords', () => {
+	it('joins pause marks to the word before', () => {
+		expect(ayahWords('ذَٰلِكَ ٱلْكِتَٰبُ لَا رَيْبَ ۛ فِيهِ ۛ هُدًۭى')).toEqual(['ذَٰلِكَ', 'ٱلْكِتَٰبُ', 'لَا', 'رَيْبَ ۛ', 'فِيهِ ۛ', 'هُدًۭى']);
+	});
+
+	it('joins the hizb mark to the word after', () => {
+		expect(ayahWords('۞ إِنَّ ٱللَّهَ')).toEqual(['۞ إِنَّ', 'ٱللَّهَ']);
+	});
+
+	it('counts إِلْ يَاسِينَ (37:130) as one word', () => {
+		expect(ayahWords('سَلَٰمٌ عَلَىٰٓ إِلْ يَاسِينَ')).toEqual(['سَلَٰمٌ', 'عَلَىٰٓ', 'إِلْ يَاسِينَ']);
+	});
+
+	it('splits the Basmalah into its four words', () => {
+		expect(ayahWords(BASMALAH_TEXT)).toHaveLength(4);
+	});
 });

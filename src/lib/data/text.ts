@@ -67,6 +67,34 @@ export function loadSurahText(s: number, translation: string, fetcher: typeof fe
 /** The Basmalah line shown above ayah 1 (Uthmani script, as in Al-Fatihah 1). */
 export const BASMALAH_TEXT = 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ';
 
+/** Pause (waqf) and sajdah marks: printed as their own token, recited with the word before. */
+const TRAILING_MARK = /^[ۖ-ۜ۩]+$/;
+/** ۞ starts a hizb quarter: it belongs with the word after it. */
+const LEADING_MARK = '۞';
+
+/** "إِلْ يَاسِينَ" (37:130) is printed as two tokens but counted as one word. */
+const JOINS_NEXT = 'إِلْ';
+
+/**
+ * An ayah's words as Quran.com numbers them for word timings: marks are joined to their word, so
+ * index i is word i + 1. (Checked against the word counts of all 6236 ayat on 2026-11-21.)
+ */
+export function ayahWords(ar: string): string[] {
+	const out: string[] = [];
+	let lead = '';
+	for (const tok of ar.replace(/﻿/g, '').split(/\s+/)) {
+		if (!tok) continue;
+		if (tok === LEADING_MARK || tok === JOINS_NEXT) lead += `${tok} `;
+		else if (out.length && !lead && TRAILING_MARK.test(tok)) out[out.length - 1] += ` ${tok}`;
+		else {
+			out.push(lead + tok);
+			lead = '';
+		}
+	}
+	if (lead) out.push(lead.trim());
+	return out;
+}
+
 const AR_DIGITS = '٠١٢٣٤٥٦٧٨٩';
 /** 255 → ٢٥٥ (Arabic-Indic digits for the end-of-ayah marker). */
 export function arabicNumber(n: number): string {
