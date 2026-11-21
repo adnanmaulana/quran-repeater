@@ -25,3 +25,16 @@ export function detail(item: Item): string {
 	}
 	return ayat;
 }
+
+/** "Al-Kahf" or "Al-Kahf + 2 more" for a whole playlist. */
+export function playlistTitle(items: Item[]): string {
+	if (!items.length) return '';
+	const first = title(items[0]);
+	return items.length > 1 ? m.title_more({ title: first, count: items.length - 1 }) : first;
+}
+
+/** "3× each · 2 loops" / "1× each · loop forever". */
+export function repeatRule(perAyah: number, listLoops: number | 'infinite'): string {
+	const loops = listLoops === 'infinite' ? m.loop_forever_short() : listLoops === 1 ? m.loops_one({ count: 1 }) : m.loops_other({ count: listLoops });
+	return `${m.each_times({ n: perAyah })} · ${loops}`;
+}

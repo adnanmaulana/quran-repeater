@@ -8,6 +8,7 @@
 	import SegmentedTabs from '#lib/components/SegmentedTabs.svelte';
 	import SelectionBar from '#lib/components/SelectionBar.svelte';
 	import SurahRow from '#lib/components/SurahRow.svelte';
+	import ContinueCard from './ContinueCard.svelte';
 	import CustomRanges from './CustomRanges.svelte';
 	import { JUZ, countAyat, searchSurahs, surah, type Surah } from '#lib/data/quran.js';
 	import { i18n } from '#lib/i18n.svelte.js';
@@ -91,6 +92,8 @@
 		</a>
 	{/snippet}
 </ScreenHeader>
+
+{#if !selecting && !adding}<ContinueCard />{/if}
 
 <div class="tabs">
 	<SegmentedTabs
