@@ -37,5 +37,8 @@
 		"@fontsource/amiri": "^5.3.0",
 		"idb-keyval": "^6.3.0",
 		"svelte-dnd-action": "^0.9.80"
+	},
+	"engines": {
+		"node": ">=22"
 	}
 }
