@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '#lib/design/Icon.svelte';
+	import { collapse, fadeInDown } from '#lib/motion/transitions.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { install, promptInstall } from '#lib/pwa/install.svelte.js';
 	import { persisted } from '#lib/stores/persisted.svelte.js';
@@ -16,7 +17,7 @@
 </script>
 
 {#if show}
-	<aside class="banner" aria-label={m.install_title()}>
+	<aside class="banner" in:fadeInDown out:collapse aria-label={m.install_title()}>
 		<span class="icon"><Icon name="phone" size={22} /></span>
 		<div class="text">
 			<b>{m.install_banner_title()}</b>

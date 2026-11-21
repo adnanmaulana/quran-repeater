@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import Icon from '#lib/design/Icon.svelte';
+	import { fadeOut, slideInUp } from '#lib/motion/transitions.js';
 	import { title } from '#lib/format.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { actions, player } from '#lib/player/player.svelte.js';
@@ -15,7 +16,7 @@
 
 {#if item && snap.ref && snap.config && snap.pos}
 	{@const name = title(item)}
-	<div class="mini">
+	<div class="mini" in:slideInUp={{ spring: 'gentle' }} out:fadeOut>
 		<a href={resolve('/player')}>
 			<span class="sr-only">{m.player_title()}:</span>
 			<span class="name">{name}</span>
@@ -81,5 +82,7 @@
 		height: 2px;
 		background: var(--night-accent);
 		transform-origin: left;
+		/* Advances once per recitation; the spring makes each step glide instead of tick. */
+		transition: transform var(--spring-gentle-ms, 0.3s) var(--spring-gentle, ease-out);
 	}
 </style>
