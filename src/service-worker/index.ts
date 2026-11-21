@@ -55,15 +55,22 @@ async function cacheFirst(cacheName: string, req: Request): Promise<Response> {
 	return hit ?? fetch(req);
 }
 
-/** Pages: try the network (fresh deploys), fall back to the cached entry when offline. */
+/** How long a page request may wait on the network before the cached app is shown instead. */
+const NETWORK_TIMEOUT_MS = 3000;
+
+/**
+ * Pages: try the network (fresh deploys), but fall back to the cached entry when offline or when
+ * the network hangs ("lie-fi"), so the app always opens quickly.
+ */
 async function entryNetworkFirst(req: Request): Promise<Response> {
-	try {
-		const res = await fetch(req);
+	const cached = await caches.match(ENTRY, { cacheName: SHELL });
+	const network = fetch(req).then(async (res) => {
 		if (res.ok && new URL(req.url).pathname === ENTRY) await (await caches.open(SHELL)).put(ENTRY, res.clone());
 		return res;
-	} catch {
-		return (await caches.match(ENTRY, { cacheName: SHELL })) ?? Response.error();
-	}
+	});
+	if (!cached) return network;
+	const timeout = new Promise<Response>((resolve) => setTimeout(() => resolve(cached), NETWORK_TIMEOUT_MS));
+	return Promise.race([network.catch(() => cached), timeout]);
 }
 
 /** Downloaded recitations come from the cache, with byte ranges for the <audio> element. */
