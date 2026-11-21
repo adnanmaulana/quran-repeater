@@ -8,6 +8,7 @@
 	import { history } from '#lib/history/history.svelte.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { actions, player } from '#lib/player/player.svelte.js';
+	import { playlists } from '#lib/playlists/playlists.svelte.js';
 
 	/** Latest unfinished session, shown only when nothing is loaded (the mini player covers that). */
 	const entry = $derived(player.snap.config ? null : (history.value.find((e) => !e.finished) ?? null));
@@ -24,7 +25,7 @@
 	<button type="button" class="card" onclick={resume}>
 		<span class="text">
 			<span class="eyebrow">{m.continue()}</span>
-			<span class="title">{playlistTitle(cfg.items)}</span>
+			<span class="title">{(entry.playlistId && playlists.value.find((p) => p.id === entry.playlistId)?.name) || playlistTitle(cfg.items)}</span>
 			<span class="meta">
 				{cfg.listLoops === 'infinite' ? m.loop_n({ n: entry.pos.listLoop + 1 }) : m.loop_of({ n: entry.pos.listLoop + 1, total: cfg.listLoops })}
 				· {reciter(cfg.reciterId).name}

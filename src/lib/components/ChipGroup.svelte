@@ -49,7 +49,7 @@
 	button.on {
 		border-color: var(--accent);
 		background: var(--accent);
-		color: #fff;
+		color: var(--on-accent);
 		font-weight: 700;
 	}
 </style>

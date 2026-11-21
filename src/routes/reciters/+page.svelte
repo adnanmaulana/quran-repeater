@@ -202,7 +202,7 @@
 	}
 	.on .avatar {
 		background: var(--accent);
-		color: #fff;
+		color: var(--on-accent);
 	}
 	.text {
 		display: flex;

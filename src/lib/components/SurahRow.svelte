@@ -73,7 +73,7 @@
 		border-radius: 8px;
 		border: 2px solid var(--border-strong);
 		background: var(--surface);
-		color: #fff;
+		color: var(--on-accent);
 	}
 	.on .box {
 		border-color: var(--accent);

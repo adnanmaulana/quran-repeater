@@ -357,6 +357,6 @@
 		grid-column: 1 / -1;
 		border: 0;
 		background: var(--accent);
-		color: #fff;
+		color: var(--on-accent);
 	}
 </style>

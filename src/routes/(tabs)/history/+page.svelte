@@ -243,7 +243,7 @@
 		padding: 12px 18px;
 		border-radius: 12px;
 		background: var(--accent);
-		color: #fff;
+		color: var(--on-accent);
 		font-size: 14px;
 		font-weight: 600;
 	}

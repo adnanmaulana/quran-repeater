@@ -52,7 +52,7 @@
 		border: 0;
 		border-radius: var(--r-md);
 		background: var(--accent);
-		color: #fff;
+		color: var(--on-accent);
 		font-size: 15px;
 		font-weight: 600;
 	}
