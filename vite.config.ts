@@ -25,8 +25,9 @@ export default defineConfig({
 			project: './project.inlang',
 			outdir: './src/lib/paraglide',
 			emitTsDeclarations: true,
-			// Client-only app, no locale in the URL: the user's choice, then the device language.
-			strategy: ['localStorage', 'preferredLanguage', 'baseLocale'],
+			// Client-only app, no locale in the URL: the user's choice, otherwise Indonesian (the
+			// base locale), whatever the device language.
+			strategy: ['localStorage', 'baseLocale'],
 			localStorageKey: 'qr.lang'
 		})
 	],

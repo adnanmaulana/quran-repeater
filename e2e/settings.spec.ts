@@ -48,3 +48,13 @@ test('every screen is in Indonesian when the app is', async ({ page }) => {
 		await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading);
 	}
 });
+
+test.describe('first visit', () => {
+	test.use({ storageState: { cookies: [], origins: [] } });
+
+	test('the app starts in Indonesian, even on an English device', async ({ page }) => {
+		await page.goto('/');
+		await expect(page.locator('html')).toHaveAttribute('lang', 'id');
+		await expect(page.getByPlaceholder('Nama atau nomor')).toBeVisible();
+	});
+});

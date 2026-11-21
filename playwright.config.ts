@@ -12,6 +12,11 @@ export default defineConfig({
 		baseURL: `http://localhost:${port}`,
 		...devices['Pixel 7'],
 		locale: 'en-US',
+		// The app defaults to Indonesian; the tests are written against the English UI.
+		storageState: {
+			cookies: [],
+			origins: [{ origin: `http://localhost:${port}`, localStorage: [{ name: 'qr.lang', value: 'en' }] }]
+		},
 		// Audio starts from taps anyway; this keeps headless runs from blocking restored sessions.
 		launchOptions: { args: ['--autoplay-policy=no-user-gesture-required'] }
 	},
